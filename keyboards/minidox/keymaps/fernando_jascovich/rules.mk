@@ -1,11 +1,8 @@
-#ifndef CONFIG_USER_H
-#define CONFIG_USER_H
-
-#include "../../config.h"
-
-#define AUTO_SHIFT_TIMEOUT 135
-
-#endif
+#define MOUSEKEY_DELAY             100
+#define MOUSEKEY_INTERVAL          25
+#define MOUSEKEY_MAX_SPEED         20
+#define MOUSEKEY_TIME_TO_MAX       20
+#define MOUSEKEY_WHEEL_MAX_SPEED   8
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 40
 
 MOUSEKEY_ENABLE   = yes
-AUTO_SHIFT_ENABLE = yes

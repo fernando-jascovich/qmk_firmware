@@ -28,9 +28,7 @@ enum {
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-  //Tap once for Esc, twice for Caps Lock
   [TD_SLASH_R_ALT]  = ACTION_TAP_DANCE_DOUBLE(KC_SLASH, KC_RALT)
-// Other declarations would go here, separated by commas, if you have them
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -61,11 +59,11 @@ KC_LGUI, LOWER, CTL_T(KC_ENTER), ALT_T(KC_SPACE), RAISE, LSFT_T(KC_TAB)\
 /* Lower
  *
  * ,----------------------------------.           ,----------------------------------.
- * |   1  |   2  |   3  |   4  |   5  |           |   `  |   -  |   +  |   '  |BckSpc|
+ * |   1  |   2  |   3  |   =  |   `  |           |   (  |   [  |   {  |   -  |BckSpc|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   6  |   7  |   8  |   9  |   0  |           |   [  |   ]  |   (  |   )  |   |  |
+ * |   4  |   5  |   6  |   *  |   '  |           |   )  |   ]  |   }  |   _  |   |  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   {  |   }  |      |      |      |           | Left | Down |  Up  | Right|   \  |
+ * |   7  |   8  |   9  |   0  |   "  |           |   @  |   #  |   %  |   &  |   \  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
  *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE|Sh/Tab|
@@ -74,18 +72,18 @@ KC_LGUI, LOWER, CTL_T(KC_ENTER), ALT_T(KC_SPACE), RAISE, LSFT_T(KC_TAB)\
  *                                `------'    `------'
  */
 [_LOWER]=LAYOUT(\
-KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_GRV,  KC_MINS, KC_PLUS, KC_QUOT, KC_BSPC, \
-KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LBRC, KC_RBRC, KC_LBRC, KC_RBRC, KC_PIPE, \
-KC_LCBR, KC_RCBR, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_BSLS, \
+KC_1,    KC_2,    KC_3,    KC_EQL,  KC_GRV,  KC_LPRN, KC_LBRC, KC_LCBR, KC_MINS, KC_BSPC, \
+KC_4,    KC_5,    KC_6,    KC_PAST, KC_QUOT, KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS, KC_PIPE, \
+KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_BSLS, \
 _______, _______, _______, _______, _______, _______\
 ),
 
 /* Raise
  *
  * ,----------------------------------.           ,----------------------------------.
- * |  Esc |      |      |      |      |           |Mou L |Mou D |Mou T |Mou R | Del  |
+ * |  Esc |      |      |      |      |           | Left | Down |  Up  | Right| Del  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |      |      |Mou 1 |Mou 2 |Mou 3 |           |      |      |      |      |      |
+ * |      |      |Mou 1 |Mou 2 |Mou 3 |           |Mou L |Mou D |Mou T |Mou R |      |
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |      |      |MouAc1|MouAc2|MouAc3|           |Mou WL|Mou WD|Mou WT|Mou WR|      |
  * `----------------------------------'           `----------------------------------'
@@ -96,8 +94,8 @@ _______, _______, _______, _______, _______, _______\
  *                                `------'    `------'
  */
 [_RAISE] = LAYOUT( \
-KC_ESC,  _______, _______,    _______,    _______,    KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_DEL,  \
-_______, _______, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, _______, _______, _______, _______, _______, \
+KC_ESC,  _______, _______,    _______,    _______,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
+_______, _______, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, _______, \
 _______, _______, KC_ACL0,    KC_ACL1,    KC_ACL2,    KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, \
 _______, _______, _______,    _______,    _______,    _______\
 ),
@@ -117,6 +115,10 @@ _______, _______, _______,    _______,    _______,    _______\
  *                                |Enter |    |Space |
  *                                `------'    `------'
  */
+
+/* Audio toggle: 113, up: 114, down: 115 */
+/* Bright up: 224, down: 225 */
+
 [_ADJUST] =  LAYOUT( \
 KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_AUDIO_MUTE, KC_AUDIO_VOL_UP, KC_AUDIO_VOL_DOWN, KC_BRIU, KC_BRID, \
 KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,       _______,         _______,           _______, _______, \

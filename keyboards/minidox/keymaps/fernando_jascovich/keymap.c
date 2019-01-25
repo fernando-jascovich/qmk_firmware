@@ -9,6 +9,7 @@ extern keymap_config_t keymap_config;
 #define _QWERTY 0
 #define _LOWER  1
 #define _RAISE  2
+#define _EMACS  5
 #define _ADJUST 16
 
 enum custom_keycodes {
@@ -16,20 +17,22 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   ADJUST,
+  EMACS,
+  EMACS_BUF_SELECT,
+  EMACS_BUF_OTHER,
+  EMACS_BUF_KILL,
+  EMACS_PROJ_FIND,
+  EMACS_PROJ_SWITCH,
+  EMACS_PROJ_AG,
+  EMACS_SPLIT_NONE,
+  EMACS_SPLIT_V,
+  EMACS_SPLIT_H,
+  EMACS_MAGIT
 };
 
 // Fillers to make layering more clear
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
-
-// Tap dance
-enum {
-  TD_SLASH_R_ALT = 0
-};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [TD_SLASH_R_ALT]  = ACTION_TAP_DANCE_DOUBLE(KC_SLASH, KC_RALT)
-};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -38,92 +41,109 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,----------------------------------.           ,----------------------------------.
  * |   Q  |   W  |   E  |   R  |   T  |           |   Y  |   U  |   I  |   O  |   P  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   A  |   S  |   D  |   F  |   G  |           |   H  |   J  |   K  |   L  |   ;  |
+ * |   A  |   S  |   D  |   F  |   G  |           |   H  |   J  |   K  |   L  |;/Shft|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   Z  |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  |//RALT|
+ * |   Z  |   X  |   C  |   V  |   B  |           |   N  |   M  |,/Shft|   .  |//RALT|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE|Sh/Tab|
+ *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
  *                  `-------------| ---- |    |----- |------+------.
  *                                |Enter |    |Space |
  *                                `------'    `------'
  */
 [_QWERTY] = LAYOUT( \
-KC_Q,    KC_W,  KC_E,            KC_R,            KC_T,  KC_Y, KC_U, KC_I,    KC_O,   KC_P,               \
-KC_A,    KC_S,  KC_D,            KC_F,            KC_G,  KC_H, KC_J, KC_K,    KC_L,   KC_SCLN,            \
-KC_Z,    KC_X,  KC_C,            KC_V,            KC_B,  KC_N, KC_M, KC_COMM, KC_DOT, TD(TD_SLASH_R_ALT), \
-KC_LGUI, LOWER, CTL_T(KC_ENTER), ALT_T(KC_SPACE), RAISE, LSFT_T(KC_TAB)\
+KC_Q,    KC_W,  KC_E,            KC_R,            KC_T,  KC_Y, KC_U, KC_I,            KC_O,   KC_P,             \
+KC_A,    KC_S,  KC_D,            KC_F,            KC_G,  KC_H, KC_J, KC_K,            KC_L,   RSFT_T(KC_SCLN),  \
+KC_Z,    KC_X,  KC_C,            KC_V,            KC_B,  KC_N, KC_M, LSFT_T(KC_COMM), KC_DOT, RALT_T(KC_SLASH), \
+KC_LGUI, LOWER, CTL_T(KC_ENTER), ALT_T(KC_SPACE), RAISE, KC_TAB\
 ),
-
 
 /* Lower
  *
  * ,----------------------------------.           ,----------------------------------.
  * |   1  |   2  |   3  |   =  |   `  |           |   (  |   [  |   {  |   -  |BckSpc|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   4  |   5  |   6  |   *  |   '  |           |   )  |   ]  |   }  |   _  |   |  |
+ * |   4  |   5  |   6  |   *  |   '  |           |   )  |   ]  |   }  |   _  ||/Shft|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   7  |   8  |   9  |   0  |   "  |           |   @  |   #  |   %  |   &  |   \  |
+ * |   7  |   8  |   9  |   0  |   "  |           |   !  |   @  |#/Shft|   $  |   \  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE|Sh/Tab|
+ *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
  *                  `-------------| ---- |    |----- |------+------.
  *                                |Enter |    |Space |
  *                                `------'    `------'
  */
 [_LOWER]=LAYOUT(\
-KC_1,    KC_2,    KC_3,    KC_EQL,  KC_GRV,  KC_LPRN, KC_LBRC, KC_LCBR, KC_MINS, KC_BSPC, \
-KC_4,    KC_5,    KC_6,    KC_PAST, KC_QUOT, KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS, KC_PIPE, \
-KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_BSLS, \
+KC_1,    KC_2,    KC_3,    KC_EQL,  KC_GRV,  KC_LPRN, KC_LBRC, KC_LCBR,         KC_MINS,   KC_BSPC,         \
+KC_4,    KC_5,    KC_6,    KC_PAST, KC_QUOT, KC_RPRN, KC_RBRC, KC_RCBR,         KC_UNDS,   RSFT_T(KC_PIPE), \
+KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO, KC_EXLM, KC_AT,   LSFT_T(KC_HASH), KC_DOLLAR, KC_BSLS,         \
 _______, _______, _______, _______, _______, _______\
 ),
 
 /* Raise
  *
  * ,----------------------------------.           ,----------------------------------.
- * |  Esc |      |      |      |      |           | Left | Down |  Up  | Right| Del  |
+ * |  Esc |   %  |   ^  |   &  |  ~   |           | Left | Down |  Up  | Right| Del  |
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |      |      |Mou 1 |Mou 2 |Mou 3 |           |Mou L |Mou D |Mou T |Mou R |      |
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |      |      |MouAc1|MouAc2|MouAc3|           |Mou WL|Mou WD|Mou WT|Mou WR|      |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE|Sh/Tab|
+ *                  | EMACS|LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
  *                  `-------------| ---- |    |----- |------+------.
  *                                |Enter |    |Space |
  *                                `------'    `------'
  */
 [_RAISE] = LAYOUT( \
-KC_ESC,  _______, _______,    _______,    _______,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
+KC_ESC,  KC_PERC, KC_CIRC,    KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
 _______, _______, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, _______, \
 _______, _______, KC_ACL0,    KC_ACL1,    KC_ACL2,    KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, \
-_______, _______, _______,    _______,    _______,    _______\
+EMACS, _______, _______,    _______,    _______,    _______\
 ),
 
 /*Adjust(Lower+Raise)
 *
  * ,----------------------------------.           ,----------------------------------.
- * |  F1  |  F2  |  F3  |  F4  |  F5  |           |AudioT|Audio+|Audio-|Brigh+|Brigh-|
+ * |  F1  |  F2  |  F3  |  F4  |  F5  |           |AudioT|Audio-|Audio+|Brigh-|Brigh+|
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |  F6  |  F7  |  F8  |  F9  |  F10 |           |      |      |      |      |      |
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |  F11 |  F12 |      |      |Reset |           |      |      |      |      |PrtScr|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE|Sh/Tab|
+ *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
  *                  `-------------| ---- |    |----- |------+------.
  *                                |Enter |    |Space |
  *                                `------'    `------'
  */
-
-/* Audio toggle: 113, up: 114, down: 115 */
-/* Bright up: 224, down: 225 */
-
 [_ADJUST] =  LAYOUT( \
-KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_AUDIO_MUTE, KC_AUDIO_VOL_UP, KC_AUDIO_VOL_DOWN, KC_BRIU, KC_BRID, \
-KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,       _______,         _______,           _______, _______, \
-KC_F11,  KC_F12,  _______, _______, RESET,   _______,       _______,         _______,           _______, KC_PSCR, \
+KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC__MUTE, KC__VOLDOWN, KC__VOLUP, KC_BRID, KC_BRIU, \
+KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,  _______,     _______,   _______, _______, \
+KC_F11,  KC_F12,  _______, _______, RESET,   _______,  _______,     _______,   _______, KC_PSCR, \
 _______, _______, _______, _______, _______, _______\
+),
+
+/*Emacs
+*
+ * ,----------------------------------.           ,----------------------------------.
+ * |SpitNo|SplitH|SplitV|      |      |           | Magit|      |      |ProjSw|ProjFi|
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |BufSel|BufOth|BufKil|      |      |           |      |      |      |      |ProjAG|
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |      |      |      |      |      |           |      |      |      |      |      |
+ * `----------------------------------'           `----------------------------------'
+ *                  ,--------------------.    ,------,-------------.
+ *                  | EMACS|LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
+ *                  `-------------| ---- |    |----- |------+------.
+ *                                |Enter |    |Space |
+ *                                `------'    `------'
+ */
+[_EMACS] =  LAYOUT( \
+EMACS_SPLIT_NONE, EMACS_SPLIT_H,   EMACS_SPLIT_V,  _______, _______, EMACS_MAGIT, _______, _______, EMACS_PROJ_SWITCH, EMACS_PROJ_FIND, \
+EMACS_BUF_SELECT, EMACS_BUF_OTHER, EMACS_BUF_KILL, _______, _______, _______,     _______, _______, _______,           EMACS_PROJ_AG,   \
+_______,          _______,         _______,        _______, _______, _______,     _______, _______, _______,           _______,         \
+_______,          _______,         _______,        _______, _______, _______\
 )
 };
 
@@ -134,40 +154,108 @@ void persistant_default_layer_set(uint16_t default_layer) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case QWERTY:
-      if (record->event.pressed) {
-        persistant_default_layer_set(1UL<<_QWERTY);
-      }
-      return false;
-      break;
-    case LOWER:
-      if (record->event.pressed) {
-        layer_on(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case RAISE:
-      if (record->event.pressed) {
-        layer_on(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case ADJUST:
-      if (record->event.pressed) {
-        layer_on(_ADJUST);
-      } else {
-        layer_off(_ADJUST);
-      }
-      return false;
-      break;
+  case QWERTY:
+    if (record->event.pressed) {
+      persistant_default_layer_set(1UL<<_QWERTY);
+    }
+    return false;
+    break;
+  case LOWER:
+    if (record->event.pressed) {
+      layer_on(_LOWER);
+      update_tri_layer(_LOWER, _RAISE, _ADJUST);
+    } else {
+      layer_off(_LOWER);
+      update_tri_layer(_LOWER, _RAISE, _ADJUST);
+    }
+    return false;
+    break;
+  case RAISE:
+    if (record->event.pressed) {
+      layer_on(_RAISE);
+      update_tri_layer(_LOWER, _RAISE, _ADJUST);
+    } else {
+      layer_off(_RAISE);
+      update_tri_layer(_LOWER, _RAISE, _ADJUST);
+    }
+    return false;
+    break;
+  case ADJUST:
+    if (record->event.pressed) {
+      layer_on(_ADJUST);
+    } else {
+      layer_off(_ADJUST);
+    }
+    return false;
+    break;
+  case EMACS:
+    if (record->event.pressed) {
+      layer_on(_EMACS);
+    } else {
+      layer_off(_EMACS);
+    }
+    return false;
+    break;
+  case EMACS_BUF_SELECT:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"switch-to-buffer"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_BUF_OTHER:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"other-window"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_BUF_KILL:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"kill-buffer"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_PROJ_FIND:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"projectile-find-file"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_PROJ_SWITCH:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"projectile-switch-project"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_PROJ_AG:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"projectile-ag"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_MAGIT:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"magit-status"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_SPLIT_NONE:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"delete-other-windows"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_SPLIT_V:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"split-window-right"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
+  case EMACS_SPLIT_H:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("x")"split-window-below"SS_TAP(X_ENTER));
+    }
+    return false;
+    break;
   }
   return true;
 }

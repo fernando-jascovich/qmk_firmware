@@ -16,23 +16,21 @@ enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
-  ADJUST,
-  EMACS,
-  EMACS_BUF_SELECT,
-  EMACS_BUF_OTHER,
-  EMACS_BUF_KILL,
-  EMACS_PROJ_FIND,
-  EMACS_PROJ_SWITCH,
-  EMACS_PROJ_AG,
-  EMACS_PROJ_VC,
-  EMACS_PROJ_TEST,
-  EMACS_PROJ_COMPILE,
-  EMACS_PROJ_OCCUR,
-  EMACS_SPLIT_NONE,
-  EMACS_SPLIT_V,
-  EMACS_SPLIT_H,
-  EMACS_CLOCK_IN,
-  EMACS_CLOCK_OUT
+  EM_BUF_SELECT,
+  EM_BUF_OTHER,
+  EM_BUF_KILL,
+  EM_PROJ_FIND,
+  EM_PROJ_SWITCH,
+  EM_PROJ_AG,
+  EM_PROJ_VC,
+  EM_PROJ_TEST,
+  EM_PROJ_COMPILE,
+  EM_PROJ_OCCUR,
+  EM_SPLIT_NONE,
+  EM_SPLIT_V,
+  EM_SPLIT_H,
+  EM_ORG_CL_I,
+  EM_ORG_CL_O
 };
 
 // Fillers to make layering more clear
@@ -101,10 +99,10 @@ _______, _______, _______, _______, _______, _______\
  *                                `------'    `------'
  */
 [_RAISE] = LAYOUT( \
-KC_ESC,  KC_PERC, KC_CIRC,    KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
-_______, _______, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, _______, \
-_______, _______, KC_ACL0,    KC_ACL1,    KC_ACL2,    KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, \
-EMACS, _______, _______,    _______,    _______,    _______\
+KC_ESC,     KC_PERC, KC_CIRC,    KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
+_______,    _______, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, _______, \
+_______,    _______, KC_ACL0,    KC_ACL1,    KC_ACL2,    KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, \
+MO(_EMACS), _______, _______,    _______,    _______,    _______\
 ),
 
 /*Adjust(Lower+Raise)
@@ -132,23 +130,23 @@ _______, _______, _______, _______, _______, _______\
 /*Emacs
 *
  * ,----------------------------------.           ,----------------------------------.
- * |SpitNo|SplitH|SplitV|      |      |           |ProjVC|ProjCo|ProjTe|ProjSw|ProjFi|
+ * |SpitNo|SplitH|SplitV|OrgClI|OrgClO|           |ProjVC|ProjCo|ProjTe|ProjSw|ProjFi|
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |BufSel|BufOth|BufKil|      |      |           |      |      |      |      |ProjAG|
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |      |      |      |      |      |           |      |      |      |      |ProjOc|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  | EMACS|LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
+ *                  |      |LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
  *                  `-------------| ---- |    |----- |------+------.
  *                                |Enter |    |Space |
  *                                `------'    `------'
  */
 [_EMACS] =  LAYOUT( \
-EMACS_SPLIT_NONE, EMACS_SPLIT_H,   EMACS_SPLIT_V,  _______, _______, EMACS_PROJ_VC, EMACS_PROJ_COMPILE, EMACS_PROJ_TEST, EMACS_PROJ_SWITCH, EMACS_PROJ_FIND, \
-EMACS_BUF_SELECT, EMACS_BUF_OTHER, EMACS_BUF_KILL, _______, _______, _______,       _______, _______, _______,           EMACS_PROJ_AG,   \
-_______,          _______,         _______,        _______, _______, _______,     _______, _______, _______,           EMACS_PROJ_OCCUR,         \
-_______,          _______,         _______,        _______, _______, _______\
+EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_ORG_CL_I, EM_ORG_CL_O, EM_PROJ_VC, EM_PROJ_COMPILE, EM_PROJ_TEST, EM_PROJ_SWITCH, EM_PROJ_FIND,  \
+EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_KILL, _______,     _______,     _______,    _______,         _______,      _______,        EM_PROJ_AG,    \
+_______,       _______,      _______,     _______,     _______,     _______,    _______,         _______,      _______,        EM_PROJ_OCCUR, \
+XXXXXXX,          _______,         _______,        _______, _______, _______\
 )
 };
 
@@ -185,97 +183,93 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return false;
     break;
-  case ADJUST:
-    if (record->event.pressed) {
-      layer_on(_ADJUST);
-    } else {
-      layer_off(_ADJUST);
-    }
-    return false;
-    break;
-  case EMACS:
-    if (record->event.pressed) {
-      layer_on(_EMACS);
-    } else {
-      layer_off(_EMACS);
-    }
-    return false;
-    break;
-  case EMACS_BUF_SELECT:
+  case EM_BUF_SELECT:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("x")"b");
     }
     return false;
     break;
-  case EMACS_BUF_OTHER:
+  case EM_BUF_OTHER:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("x")"o");
     }
     return false;
     break;
-  case EMACS_BUF_KILL:
+  case EM_BUF_KILL:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("x")"k"SS_TAP(X_ENTER));
     }
     return false;
     break;
-  case EMACS_PROJ_FIND:
+  case EM_PROJ_FIND:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("c")"pf");
     }
     return false;
     break;
-  case EMACS_PROJ_SWITCH:
+  case EM_PROJ_SWITCH:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("c")"pp");
     }
     return false;
     break;
-  case EMACS_PROJ_AG:
+  case EM_PROJ_AG:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("c")"pss");
     }
     return false;
     break;
-  case EMACS_PROJ_VC:
+  case EM_PROJ_VC:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("c")"pv");
     }
     return false;
     break;
-  case EMACS_PROJ_TEST:
+  case EM_PROJ_TEST:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("c")"pP");
     }
     return false;
     break;
-  case EMACS_PROJ_COMPILE:
+  case EM_PROJ_COMPILE:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("c")"pc");
     }
     return false;
     break;
-  case EMACS_PROJ_OCCUR:
+  case EM_PROJ_OCCUR:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("c")"po");
     }
     return false;
     break;
-  case EMACS_SPLIT_NONE:
+  case EM_SPLIT_NONE:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("x")"1");
     }
     return false;
     break;
-  case EMACS_SPLIT_V:
+  case EM_SPLIT_V:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("x")"3");
     }
     return false;
     break;
-  case EMACS_SPLIT_H:
+  case EM_SPLIT_H:
     if (record->event.pressed) {
       SEND_STRING(SS_LCTRL("x")"2");
+    }
+    return false;
+    break;
+  case EM_ORG_CL_I:
+    if (record->event.pressed) {
+      SEND_STRING(SS_DOWN(X_LCTRL)"cxi"SS_UP(X_LCTRL));
+    }
+    return false;
+    break;
+  case EM_ORG_CL_O:
+    if (record->event.pressed) {
+      SEND_STRING(SS_DOWN(X_LCTRL)"cxo"SS_UP(X_LCTRL));
     }
     return false;
     break;

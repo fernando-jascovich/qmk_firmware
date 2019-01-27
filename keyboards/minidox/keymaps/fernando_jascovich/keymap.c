@@ -146,7 +146,7 @@ _______, _______, _______, _______, _______, _______\
 EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_ORG_CL_I, EM_ORG_CL_O, EM_PROJ_VC, EM_PROJ_COMPILE, EM_PROJ_TEST, EM_PROJ_SWITCH, EM_PROJ_FIND,  \
 EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_KILL, _______,     _______,     _______,    _______,         _______,      _______,        EM_PROJ_AG,    \
 _______,       _______,      _______,     _______,     _______,     _______,    _______,         _______,      _______,        EM_PROJ_OCCUR, \
-XXXXXXX,          _______,         _______,        _______, _______, _______\
+_______,          _______,         _______,        _______, _______, _______ \
 )
 };
 

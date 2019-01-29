@@ -197,7 +197,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     break;
   case EM_BUF_KILL:
     if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"k"SS_TAP(X_ENTER));
+      SEND_STRING(SS_LCTRL("x")"0");
     }
     return false;
     break;

@@ -49,16 +49,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |   Z  |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  |//RALT|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE|Tab/Sh|
- *                  `-------------| ---- |    |----- |------+------.
- *                                |Enter |    |Space |
+ *                  |  GUI |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  `-------------| ---- |    | Space|------+------.
+ *                                |Enter |    |      |
  *                                `------'    `------'
  */
 [_QWERTY] = LAYOUT( \
-KC_Q,    KC_W,  KC_E,            KC_R,            KC_T,  KC_Y, KC_U, KC_I,    KC_O,   KC_P,             \
-KC_A,    KC_S,  KC_D,            KC_F,            KC_G,  KC_H, KC_J, KC_K,    KC_L,   RSFT_T(KC_SCLN),  \
-KC_Z,    KC_X,  KC_C,            KC_V,            KC_B,  KC_N, KC_M, KC_COMM, KC_DOT, RALT_T(KC_SLASH), \
-KC_LGUI, LOWER, CTL_T(KC_ENTER), ALT_T(KC_SPACE), RAISE, LSFT_T(KC_TAB)\
+KC_Q,    KC_W,  KC_E,            KC_R,     KC_T,  KC_Y, KC_U, KC_I,    KC_O,   KC_P,             \
+KC_A,    KC_S,  KC_D,            KC_F,     KC_G,  KC_H, KC_J, KC_K,    KC_L,   RSFT_T(KC_SCLN),  \
+KC_Z,    KC_X,  KC_C,            KC_V,     KC_B,  KC_N, KC_M, KC_COMM, KC_DOT, RALT_T(KC_SLASH), \
+KC_LGUI, LOWER, CTL_T(KC_ENTER), KC_SPACE, RAISE, KC_LALT\
 ),
 
 /* Lower
@@ -66,20 +66,20 @@ KC_LGUI, LOWER, CTL_T(KC_ENTER), ALT_T(KC_SPACE), RAISE, LSFT_T(KC_TAB)\
  * ,----------------------------------.           ,----------------------------------.
  * |   1  |   2  |   3  |   =  |   `  |           |   (  |   [  |   {  |   -  |BckSpc|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   4  |   5  |   6  |   *  |   '  |           |   )  |   ]  |   }  |   _  ||/Shft|
+ * |   4  |   5  |   6  |   *  |   '  |           |   )  |   ]  |   }  |   _  |   |  |
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |   7  |   8  |   9  |   0  |   "  |           |   !  |   @  |   #  |   $  |   \  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE|Tab/Sh|
+ *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE| L_Alt|
  *                  `-------------| ---- |    |----- |------+------.
  *                                |Enter |    |Space |
  *                                `------'    `------'
  */
 [_LOWER]=LAYOUT(\
-KC_1,    KC_2,    KC_3,    KC_EQL,  KC_GRV,  KC_LPRN, KC_LBRC, KC_LCBR, KC_MINS,   KC_BSPC,         \
-KC_4,    KC_5,    KC_6,    KC_PAST, KC_QUOT, KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS,   RSFT_T(KC_PIPE), \
-KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO, KC_EXLM, KC_AT,   KC_HASH, KC_DOLLAR, KC_BSLS,         \
+KC_1,    KC_2,    KC_3,    KC_EQL,  KC_GRV,  KC_LPRN, KC_LBRC, KC_LCBR, KC_MINS,   KC_BSPC, \
+KC_4,    KC_5,    KC_6,    KC_PAST, KC_QUOT, KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS,   KC_PIPE, \
+KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO, KC_EXLM, KC_AT,   KC_HASH, KC_DOLLAR, KC_BSLS, \
 _______, _______, _______, _______, _______, _______\
 ),
 
@@ -88,20 +88,20 @@ _______, _______, _______, _______, _______, _______\
  * ,----------------------------------.           ,----------------------------------.
  * |  Esc |   %  |   ^  |   &  |  ~   |           | Left | Down |  Up  | Right| Del  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |      |      |Mou 1 |Mou 2 |Mou 3 |           |Mou L |Mou D |Mou T |Mou R |      |
+ * |LShift|   +  |Mou 1 |Mou 2 |Mou 3 |           |Mou L |Mou D |Mou T |Mou R | Tab  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |      |      |MouAc1|MouAc2|MouAc3|           |Mou WL|Mou WD|Mou WT|Mou WR|      |
+ * |      |   :  |MouAc1|MouAc2|MouAc3|           |Mou WL|Mou WD|Mou WT|Mou WR|      |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  | EMACS|LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
- *                  `-------------| ---- |    |----- |------+------.
- *                                |Enter |    |Space |
+ *                  | EMACS|LOWER |      |    |      | RAISE| L_Alt|
+ *                  `-------------|L_Alt |    | Space|------+------.
+ *                                |      |    |      |
  *                                `------'    `------'
  */
 [_RAISE] = LAYOUT( \
 KC_ESC,     KC_PERC, KC_CIRC,    KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
-_______,    _______, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, _______, \
-_______,    _______, KC_ACL0,    KC_ACL1,    KC_ACL2,    KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, \
+KC_LSFT,    KC_PLUS, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_TAB,  \
+_______,    KC_COLN, KC_ACL0,    KC_ACL1,    KC_ACL2,    KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, \
 MO(_EMACS), _______, _______,    _______,    _______,    _______\
 ),
 
@@ -115,7 +115,7 @@ MO(_EMACS), _______, _______,    _______,    _______,    _______\
  * |  F11 |  F12 |      |      |Reset |           |      |      |      |      |PrtScr|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
+ *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE| L_Alt|
  *                  `-------------| ---- |    |----- |------+------.
  *                                |Enter |    |Space |
  *                                `------'    `------'
@@ -137,7 +137,7 @@ _______, _______, _______, _______, _______, _______\
  * |      |      |      |      |      |           |      |      |      |      |ProjOc|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |      |LOWER | Ctrl |    |L_Alt | RAISE| Tab  |
+ *                  |  GUI |LOWER | Ctrl |    |L_Alt | RAISE| L_Alt|
  *                  `-------------| ---- |    |----- |------+------.
  *                                |Enter |    |Space |
  *                                `------'    `------'

@@ -1,1 +1,5 @@
 MOUSEKEY_ENABLE = yes
+AUDIO_ENABLE = yes
+NO_DEBUG = yes
+NO_PRINT = yes
+NO_ACTION_TAPPING = yes

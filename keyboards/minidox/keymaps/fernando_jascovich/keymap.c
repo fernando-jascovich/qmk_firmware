@@ -30,7 +30,10 @@ enum custom_keycodes {
   EM_SPLIT_V,
   EM_SPLIT_H,
   EM_ORG_CL_I,
-  EM_ORG_CL_O
+  EM_ORG_CL_O,
+  EM_COMMENT,
+  EM_TOP,
+  EM_BOTTOM
 };
 
 // Fillers to make layering more clear
@@ -49,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |   Z  |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  |   /  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
  *                  `-------------| ---- |    | Space|------+------.
  *                                |Enter |    |      |
  *                                `------'    `------'
@@ -58,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 KC_Q,    KC_W,  KC_E,            KC_R,     KC_T,  KC_Y, KC_U, KC_I,    KC_O,   KC_P,     \
 KC_A,    KC_S,  KC_D,            KC_F,     KC_G,  KC_H, KC_J, KC_K,    KC_L,   KC_LSHIFT,\
 KC_Z,    KC_X,  KC_C,            KC_V,     KC_B,  KC_N, KC_M, KC_COMM, KC_DOT, KC_SLASH, \
-KC_LGUI, LOWER, CTL_T(KC_ENTER), KC_SPACE, RAISE, KC_LALT\
+MO(_EMACS), LOWER, CTL_T(KC_ENTER), KC_SPACE, RAISE, KC_LALT\
 ),
 
 /* Lower
@@ -71,7 +74,7 @@ KC_LGUI, LOWER, CTL_T(KC_ENTER), KC_SPACE, RAISE, KC_LALT\
  * |   7  |   8  |   9  |   0  |   "  |           |   !  |   @  |   #  |   $  |   \  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
  *                  `-------------| ---- |    | Space|------+------.
  *                                |Enter |    |      |
  *                                `------'    `------'
@@ -88,25 +91,25 @@ _______, _______, _______, _______, _______, _______\
  * ,----------------------------------.           ,----------------------------------.
  * |  Esc |   %  |   ^  |   &  |  ~   |           | Left | Down |  Up  | Right| Del  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |CapsLk|   +  |Mou 1 |Mou 2 |Mou 3 |           |Mou L |Mou D |Mou T |Mou R | Tab  |
+ * |  Tab |   +  |      |   :  |   ;  |           |Mou L |Mou D |Mou T |Mou R |CapsLk|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |      |   :  |   ;  |      |MouAc2|           |Mou WL|Mou WD|Mou WT|Mou WR| AltGr|
+ * |  GUI |MouAc2|Mou 1 |Mou 2 |Mou 3 |           |Mou WL|Mou WD|Mou WT|Mou WR| AltGr|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  | EMACS|LOWER |      |    |      | RAISE| L_Alt|
- *                  `-------------|L_Alt |    | Space|------+------.
- *                                |      |    |      |
+ *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  `-------------| ---- |    | Space|------+------.
+ *                                |Enter |    |      |
  *                                `------'    `------'
  */
 [_RAISE] = LAYOUT( \
-KC_ESC,     KC_PERC, KC_CIRC,    KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
-KC_CAPS,    KC_PLUS, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_TAB,  \
-_______,    KC_COLN, KC_SCLN,    _______,    KC_ACL1,    KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ALGR, \
-MO(_EMACS), _______, _______,    _______,    _______,    _______\
+KC_ESC,    KC_PERC,  KC_CIRC,   KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,        \
+KC_TAB,  KC_PLUS,   _______,    KC_COLN,    KC_SCLN,    KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_CAPS,       \
+KC_LGUI, KC_ACL1,   KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, OSM(MOD_RALT), \
+_______, _______,   _______,    _______,    _______,    _______\
 ),
 
 /*Adjust(Lower+Raise)
-*
+ *
  * ,----------------------------------.           ,----------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |           |AudioT|Audio-|Audio+|Brigh-|Brigh+|
  * |------+------+------+------+------|           |------+------+------+------+------|
@@ -115,7 +118,7 @@ MO(_EMACS), _______, _______,    _______,    _______,    _______\
  * |  F11 |  F12 |      |      |Reset |           |      |      |      |      |PrtScr|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
  *                  `-------------| ---- |    | Space|------+------.
  *                                |Enter |    |      |
  *                                `------'    `------'
@@ -132,20 +135,20 @@ _______, _______, _______, _______, _______, _______\
  * ,----------------------------------.           ,----------------------------------.
  * |SpitNo|SplitH|SplitV|OrgClI|OrgClO|           |ProjVC|ProjCo|ProjTe|ProjSw|ProjFi|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |BufSel|BufOth|BufKil|      |      |           |      |      |      |      |ProjAG|
+ * |BufSel|BufOth|BufKil|      |      |           |Commt |      |      |      |ProjAG|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |      |      |      |      |      |           |      |      |      |      |ProjOc|
+ * |      |      |      |      |      |           |      |      |  Top |Bottom|ProjOc|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |  GUI |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
  *                  `-------------| ---- |    | Space|------+------.
  *                                |Enter |    |      |
  *                                `------'    `------'
  */
 [_EMACS] =  LAYOUT( \
-EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_ORG_CL_I, EM_ORG_CL_O, EM_PROJ_VC, EM_PROJ_COMPILE, EM_PROJ_TEST, EM_PROJ_SWITCH, EM_PROJ_FIND,  \
-EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_KILL, _______,     _______,     _______,    _______,         _______,      _______,        EM_PROJ_AG,    \
-_______,       _______,      _______,     _______,     _______,     _______,    _______,         _______,      _______,        EM_PROJ_OCCUR, \
+EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_ORG_CL_I, EM_ORG_CL_O, EM_PROJ_VC, EM_PROJ_COMPILE, EM_PROJ_TEST, EM_PROJ_SWITCH, EM_PROJ_FIND, \
+EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_KILL, _______,     _______,     EM_COMMENT, _______,         _______,      _______,        EM_PROJ_AG,   \
+_______,       _______,      _______,     _______,     _______,     _______,    _______,         EM_TOP,      EM_BOTTOM,        EM_PROJ_OCCUR, \
 _______,          _______,         _______,        _______, _______, _______ \
 )
 };
@@ -270,6 +273,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   case EM_ORG_CL_O:
     if (record->event.pressed) {
       SEND_STRING(SS_DOWN(X_LCTRL)"cxo"SS_UP(X_LCTRL));
+    }
+    return false;
+    break;
+  case EM_COMMENT:
+    if (record->event.pressed) {
+      SEND_STRING(SS_DOWN(X_LCTRL)"x;"SS_UP(X_LCTRL));
+    }
+    return false;
+    break;
+  case EM_TOP:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT("<"));
+    }
+    return false;
+    break;
+  case EM_BOTTOM:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LALT(">"));
     }
     return false;
     break;

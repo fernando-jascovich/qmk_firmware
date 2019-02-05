@@ -81,31 +81,30 @@ MO(_EMACS), LOWER, CTL_T(KC_ENTER), KC_SPACE, RAISE, KC_LALT\
  */
 [_LOWER]=LAYOUT(\
 KC_1,    KC_2,    KC_3,    KC_EQL,  KC_GRV,  KC_LPRN, KC_LBRC, KC_LCBR, KC_MINS,   KC_BSPC, \
-KC_4,    KC_5,    KC_6,    KC_PAST, KC_QUOT, KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS,   KC_PIPE, \
+KC_4,    KC_5,    KC_6,    KC_ASTR, KC_QUOT, KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS,   KC_PIPE, \
 KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO, KC_EXLM, KC_AT,   KC_HASH, KC_DOLLAR, KC_BSLS, \
 _______, _______, _______, _______, _______, _______\
 ),
-
 /* Raise
  *
  * ,----------------------------------.           ,----------------------------------.
  * |  Esc |   %  |   ^  |   &  |  ~   |           | Left | Down |  Up  | Right| Del  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |  Tab |   +  |      |   :  |   ;  |           |Mou L |Mou D |Mou T |Mou R |CapsLk|
+ * |  Tab |   +  |      |   :  |  ;   |           |Mou L |Mou D |Mou T |Mou R |CapsLk|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |  GUI |MouAc2|Mou 1 |Mou 2 |Mou 3 |           |Mou WL|Mou WD|Mou WT|Mou WR| AltGr|
+ * |      |MouAc2|Mou 1 |Mou 2 |Mou 3 |           |Mou WL|Mou WD|Mou WT|Mou WR| AltGr|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
- *                  `-------------| ---- |    | Space|------+------.
- *                                |Enter |    |      |
+ *                  |EMACS |LOWER |      |    |      | RAISE| L_Alt|
+ *                  `-------------| GUI  |    | Space|------+------.
+ *                                |      |    |      |
  *                                `------'    `------'
  */
 [_RAISE] = LAYOUT( \
-KC_ESC,    KC_PERC,  KC_CIRC,   KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,        \
-KC_TAB,  KC_PLUS,   _______,    KC_COLN,    KC_SCLN,    KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_CAPS,       \
-KC_LGUI, KC_ACL1,   KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, OSM(MOD_RALT), \
-_______, _______,   _______,    _______,    _______,    _______\
+KC_ESC,  KC_PERC, KC_CIRC,    KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,        \
+KC_TAB,  KC_PLUS, _______,    KC_COLN,    KC_SCLN,    KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_CAPS,       \
+_______, KC_ACL1, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, OSM(MOD_RALT), \
+_______, _______, KC_LGUI,    _______,    _______,    _______\
 ),
 
 /*Adjust(Lower+Raise)

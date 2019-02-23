@@ -75,7 +75,8 @@ enum custom_keycodes {
   I3_MOVE_U,
   I3_MOVE_R,
   I3_QUIT,
-  I3_RESET
+  I3_RESET,
+  I3_KILL,
 };
 
 // Fillers to make layering more clear
@@ -91,7 +92,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |   A  |   S  |   D  |   F  |   G  |           |   H  |   J  |   K  |   L  | Shift|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   Z  |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  |   /  |
+ * |   Z  |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  |/ / I3|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
  *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
@@ -102,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_QWERTY] = LAYOUT( \
 KC_Q,    KC_W,  KC_E,            KC_R,     KC_T,  KC_Y, KC_U, KC_I,    KC_O,   KC_P,     \
 KC_A,    KC_S,  KC_D,            KC_F,     KC_G,  KC_H, KC_J, KC_K,    KC_L,   KC_LSHIFT,\
-KC_Z,    KC_X,  KC_C,            KC_V,     KC_B,  KC_N, KC_M, KC_COMM, KC_DOT, KC_SLASH, \
+KC_Z,    KC_X,  KC_C,            KC_V,     KC_B,  KC_N, KC_M, KC_COMM, KC_DOT, LT(_I3, KC_SLASH), \
 MO(_EMACS), LOWER, CTL_T(KC_ENTER), KC_SPACE, RAISE, KC_LALT\
 ),
 
@@ -138,16 +139,16 @@ _______, _______, _______, _______, _______, _______                   \
  * `----------------------------------'           `----------------------------------'
 
  *                  ,--------------------.    ,------,-------------.
- *                  |EMACS |LOWER |      |    |      | RAISE| L_Alt|
- *                  `-------------|  I3  |    | Space|------+------.
- *                                |      |    |      |
+ *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  `-------------| ---- |    | Space|------+------.
+ *                                |Enter |    |      |
  *                                `------'    `------'
  */
 [_RAISE] = LAYOUT( \
 KC_ESC,  KC_PERC, KC_CIRC,    KC_AMPR,    KC_TILD,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
 KC_TAB,  KC_PLUS, XXXXXXX,    KC_COLN,    KC_SCLN,    KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_CAPS, \
 KC_PGUP, KC_PGDN, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ALGR, \
-_______, _______, LM(_I3, MOD_LGUI),    _______,    _______,    _______          \
+_______, _______, _______,    _______,    _______,    _______                \
 ),
 
 /*Adjust(Lower+Raise)
@@ -155,7 +156,7 @@ _______, _______, LM(_I3, MOD_LGUI),    _______,    _______,    _______         
  * ,----------------------------------.           ,----------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |           |AudioT|Audio-|Audio+|  F14 |  F15 |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |  F6  |  F7  |  F8  |  F9  |  F10 |           |      |      |      |      |      |
+ * |  F6  |  F7  |  F8  |  F9  |  F10 |           |      |      |      |      | Power|
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |  F11 |  F12 |      |      |Reset |           |      |      |      |      |PrtScr|
  * `----------------------------------'           `----------------------------------'
@@ -167,7 +168,7 @@ _______, _______, LM(_I3, MOD_LGUI),    _______,    _______,    _______         
  */
 [_ADJUST] =  LAYOUT( \
 KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC__MUTE, KC__VOLDOWN, KC__VOLUP, KC_F14, KC_F15, \
-KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,  _______,     _______,   _______, _______, \
+KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,  _______,     _______,   _______, KC_POWER, \
 KC_F11,  KC_F12,  _______, _______, RESET,   _______,  _______,     _______,   _______, KC_PSCR, \
 _______, _______, _______, _______, _______, _______\
 ),
@@ -201,19 +202,19 @@ _______,       _______,      _______,     _______,     _______,      _______\
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |To_W_1|To_W_2|To_W_3|To_W_4|To_W_5|           |FocusL|FocusD|FocusU|FocusR| Term |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |SplitH|SplitV|FullSc|Tabbed|LayTgl|           | MoveL| MoveD| MoveU| MoveR| Quit |
+ * |SplitH|SplitV|FullSc|Tabbed|LayTgl|           | MoveL| MoveD| MoveU| MoveR|      |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |EMACS | GUI  |      |    | Focus|SplitT| Reset|
- *                  `-------------|  I3  |    |Toggle|------+------.
+ *                  |EMACS | Kill |      |    | Focus|SplitT| Reset|
+ *                  `-------------| GUI  |    |Toggle|------+------.
  *                                |      |    |      |
  *                                `------'    `------'
  */
 [_I3] =  LAYOUT( \
 I3_W1,      I3_W2,      I3_W3,    I3_W4,           I3_W5,            I3_RESIZE_L, I3_RESIZE_D, I3_RESIZE_U, I3_RESIZE_R, I3_DMENU, \
 I3_TO_W1,   I3_TO_W2,   I3_TO_W3, I3_TO_W4,        I3_TO_W5,         I3_FOCUS_L,  I3_FOCUS_D,  I3_FOCUS_U,  I3_FOCUS_R,  I3_TERM,  \
-I3_SPLIT_H, I3_SPLIT_V, I3_FS,    I3_TABBED,       I3_LAYOUT_TOGGLE, I3_MOVE_L,   I3_MOVE_D,   I3_MOVE_U,   I3_MOVE_R,   I3_QUIT,  \
-_______,    KC_LGUI,    _______,  I3_FOCUS_TOGGLE, I3_SPLIT_TOGGLE,  I3_RESET\
+I3_SPLIT_H, I3_SPLIT_V, I3_FS,    I3_TABBED,       I3_LAYOUT_TOGGLE, I3_MOVE_L,   I3_MOVE_D,   I3_MOVE_U,   I3_MOVE_R,   _______,  \
+_______,    I3_KILL,    KC_LGUI,  I3_FOCUS_TOGGLE, I3_SPLIT_TOGGLE,  I3_RESET\
 )
 };
 
@@ -604,6 +605,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return false;
     break;
+  case I3_KILL:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LGUI(SS_LSFT("q")));
+    }
   }
   return true;
 }

@@ -1,5 +1,6 @@
 # Enables
 MOUSEKEY_ENABLE = yes
+TAP_DANCE_ENABLE = yes
 
 # Disables
 AUDIO_ENABLE = no

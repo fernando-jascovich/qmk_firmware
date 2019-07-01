@@ -11,6 +11,7 @@ extern keymap_config_t keymap_config;
 #define _RAISE  2
 #define _EMACS  5
 #define _I3     6
+#define _MOUSE  10
 #define _ADJUST 16
 
 enum custom_keycodes {
@@ -24,13 +25,12 @@ enum custom_keycodes {
   EM_W_INC_V,
   EM_W_INC_H,
   EM_W_BALANCE,
-  EM_PROJ_FIND,
-  EM_PROJ_SWITCH,
-  EM_PROJ_AG,
-  EM_PROJ_VC,
-  EM_PROJ_TEST,
-  EM_PROJ_COMPILE,
-  EM_PROJ_OCCUR,
+  EM_C_C_F,
+  EM_C_X_C_F,
+  EM_C_C_B,
+  EM_C_C_S,
+  EM_MAGIT,
+  EM_C_C_C,
   EM_SPLIT_NONE,
   EM_SPLIT_V,
   EM_SPLIT_H,
@@ -44,6 +44,7 @@ enum custom_keycodes {
   EM_MAC_ST,
   EM_MAC_END,
   EM_QUERY_R,
+  EM_REGEX_R,
   EM_DIRED,
   I3_W1,
   I3_W2,
@@ -81,6 +82,47 @@ enum custom_keycodes {
   I3_KILL,
 };
 
+enum {
+  TD_CTRL_LALT = 0
+};
+
+void dance_ctrl_finished(qk_tap_dance_state_t *state, void *user_data) {
+  switch(state->count) {
+  case 1:
+    register_code(KC_LCTRL);
+    break;
+  case 2:
+    register_code(KC_LALT);
+    break;
+  case 3:
+    register_code(KC_LCTRL);
+    register_code(KC_LALT);
+    break;
+  }
+}
+
+void dance_ctrl_reset(qk_tap_dance_state_t *state, void *user_data) {
+  switch(state->count) {
+  case 1:
+    unregister_code(KC_LCTRL);
+    break;
+  case 2:
+    unregister_code(KC_LALT);
+    break;
+  case 3:
+    unregister_code(KC_LCTRL);
+    unregister_code(KC_LALT);
+    break;
+  }
+}
+
+//Tap Dance Definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+  /* [TD_CTRL_LALT]  = ACTION_TAP_DANCE_DOUBLE(KC_LCTRL, KC_LALT), */
+  [TD_CTRL_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_ctrl_finished, dance_ctrl_reset),
+};
+
+
 // Fillers to make layering more clear
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
@@ -88,7 +130,6 @@ enum custom_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Qwerty
- *
  * ,----------------------------------.           ,----------------------------------.
  * |   Q  |   W  |   E  |   R  |   T  |           |   Y  |   U  |   I  |   O  |   P  |
  * |------+------+------+------+------|           |------+------+------+------+------|
@@ -97,61 +138,59 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Z/I3 |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  | /|AGR|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
  *                  `-------------| ---- |    | Space|------+------.
- *                                |Enter |    |      |
+ *                                | LAlt |    |      |
  *                                `------'    `------'
  */
-[_QWERTY] = LAYOUT( \
-KC_Q,          KC_W,  KC_E,            KC_R,     KC_T,  KC_Y, KC_U, KC_I,    KC_O,   KC_P,      \
-KC_A,          KC_S,  KC_D,            KC_F,     KC_G,  KC_H, KC_J, KC_K,    KC_L,   KC_LSHIFT, \
-LT(_I3, KC_Z), KC_X,  KC_C,            KC_V,     KC_B,  KC_N, KC_M, KC_COMM, KC_DOT, ALGR_T(KC_SLASH), \
-MO(_EMACS),    LOWER, CTL_T(KC_ENTER), KC_SPACE, RAISE, KC_LALT\
-),
+  [_QWERTY] = LAYOUT( \
+    KC_Q,          KC_W,       KC_E,             KC_R,     KC_T,     KC_Y, KC_U, KC_I,    KC_O,   KC_P, \
+    KC_A,          KC_S,       KC_D,             KC_F,     KC_G,     KC_H, KC_J, KC_K,    KC_L,   KC_LSHIFT, \
+    LT(_I3, KC_Z), KC_X,       KC_C,             KC_V,     KC_B,     KC_N, KC_M, KC_COMM, KC_DOT, ALGR_T(KC_SLASH), \
+    LOWER,         MO(_EMACS), TD(TD_CTRL_LALT), KC_SPACE, KC_ENTER, RAISE \
+    ),
 
 /* Lower
- *
  * ,----------------------------------.           ,----------------------------------.
- * |   1  |   2  |   3  |   :  |   `  |           |   (  |   [  |   {  |   -  |BckSpc|
+ * |   1  |   2  |   3  |   :  |   `  |           |   (  |   [  |   {  |   -  |   |  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   4  |   5  |   6  |   ;  |   '  |           |   )  |   ]  |   }  |   _  |   |  |
+ * |   4  |   5  |   6  |   ;  |   '  |           |   )  |   ]  |   }  |   _  |   \  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   7  |   8  |   9  |   0  |   "  |           |   !  |   @  |   #  |   $  |   \  |
+ * |   7  |   8  |   9  |   0  |   "  |           |      |      |      |   <  |   >  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
- *                  `-------------| ---- |    | Space|------+------.
- *                                |Enter |    |      |
+ *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
+ *                  `-------------| ---- |    |BckSpc|------+------.
+ *                                | LAlt |    |      |
  *                                `------'    `------'
  */
-[_LOWER]=LAYOUT(\
-KC_1,    KC_2,    KC_3,    KC_COLN, KC_GRV,   KC_LPRN, KC_LBRC, KC_LCBR, KC_MINS,   KC_BSPC, \
-KC_4,    KC_5,    KC_6,    KC_SCLN, KC_QUOT,  KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS,   KC_PIPE, \
-KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO,  KC_EXLM, KC_AT,   KC_HASH, KC_DOLLAR, KC_BSLS, \
-_______, _______, _______, _______, _______, _______\
-),
-/* Raise
- *
- * ,----------------------------------.           ,----------------------------------.
- * |  Esc |   %  |   ^  |   &  |  *   |           | Left | Down |  Up  | Right| Del  |
- * |------+------+------+------+------|           |------+------+------+------+------|
- * |  <   |   ~  |   ?  |   +  |  =   |           |Mou L |Mou D |Mou T |Mou R |CapsLk|
- * |------+------+------+------+------|           |------+------+------+------+------|
- * |  >   |      |Mou 1 |Mou 2 |Mou 3 |           |Mou WL|Mou WD|Mou WT|Mou WR|      |
- * `----------------------------------'           `----------------------------------'
+  [_LOWER] = LAYOUT(\
+    KC_1,    KC_2,    KC_3,    KC_COLN, KC_GRV,   KC_LPRN, KC_LBRC, KC_LCBR, KC_MINS,   KC_PIPE, \
+    KC_4,    KC_5,    KC_6,    KC_SCLN, KC_QUOT,  KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS,   KC_BSLS, \
+    KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO,  _______, _______, _______, KC_LT,   KC_GT, \
+    _______, _______, _______, KC_BSPC, _______, _______                \
+    ),
 
+/* Raise
+ * ,----------------------------------.           ,----------------------------------.
+ * |  Esc |   ^  |   *  |   +  |  %   |           |  ¡   |  ¿   |   @  |   $  |  Del |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |CapsLk|   ~  |   /  |   -  |  =   |           |  !   |  ?   |   #  |   &  |  GUI |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |  Tab | Left | Down |  Up  | Right|           |      |      |      |      |MouTgl|
+ * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  | Tab  |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
  *                  `-------------| ---- |    | Space|------+------.
- *                                |Enter |    |      |
+ *                                | LAlt |    |      |
  *                                `------'    `------'
  */
-[_RAISE] = LAYOUT( \
-KC_ESC, KC_PERC, KC_CIRC,    KC_AMPR,    KC_ASTR,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  \
-KC_LT,  KC_TILD, KC_QUES,    KC_PLUS,    KC_EQL,     KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_CAPS, \
-KC_GT,  _______, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, \
-KC_TAB, _______, _______,    _______,    _______,    _______\
-),
+  [_RAISE] = LAYOUT( \
+    KC_ESC,  KC_CIRC, KC_ASTR,  KC_PLUS,  KC_PERC, ALGR(LSFT(KC_1)), ALGR(KC_SLSH), KC_AT,   KC_DOLLAR, KC_DEL,     \
+    KC_CAPS, KC_TILD, KC_SLASH, KC_MINUS, KC_EQL,  KC_EXLM,          KC_QUES,       KC_HASH, KC_AMPR,   KC_LGUI,    \
+    KC_TAB,  KC_LEFT, KC_DOWN,  KC_UP,    KC_RGHT, _______,          _______,       _______, _______,   TG(_MOUSE), \
+    _______,  _______, _______,  _______, _______, _______\
+    ),
 
 /*Adjust(Lower+Raise)
  *
@@ -160,51 +199,76 @@ KC_TAB, _______, _______,    _______,    _______,    _______\
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |  F6  |  F7  |  F8  |  F9  |  F10 |           | Home |PgDown| PgUp |  End |      |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |  F11 |  F12 |Power |      |Reset |           |      |      |C+S+PS| S+PS |  PS  |
+ * |  F11 |  F12 |      |      |Reset |           |      |      |C+S+PS| S+PS |  PS  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
  *                  `-------------| ---- |    | Space|------+------.
- *                                |Enter |    |      |
+ *                                | LAlt |    |      |
  *                                `------'    `------'
  */
-[_ADJUST] =  LAYOUT( \
-KC_F1,   KC_F2,   KC_F3,    KC_F4,   KC_F5,   KC__MUTE, KC__VOLDOWN, KC__VOLUP,           KC_F14,        KC_F15,  \
-KC_F6,   KC_F7,   KC_F8,    KC_F9,   KC_F10,  KC_HOME,  KC_PGDN,     KC_PGUP,             KC_END,        _______, \
-KC_F11,  KC_F12,  KC_POWER, _______, RESET,   _______,  _______,     LCTL(LSFT(KC_PSCR)), LSFT(KC_PSCR), KC_PSCR, \
-_______, _______, _______,  _______, _______, _______\
-),
+  [_ADJUST] =  LAYOUT( \
+    KC_F1,   KC_F2,   KC_F3,    KC_F4,   KC_F5,   KC__MUTE, KC__VOLDOWN, KC__VOLUP,           KC_F14,        KC_F15,  \
+    KC_F6,   KC_F7,   KC_F8,    KC_F9,   KC_F10,  KC_HOME,  KC_PGDN,     KC_PGUP,             KC_END,        _______, \
+    KC_F11,  KC_F12,  _______, _______, RESET,   _______,  _______,     LCTL(LSFT(KC_PSCR)), LSFT(KC_PSCR), KC_PSCR, \
+    _______, _______, _______,  _______, _______, _______\
+    ),
 
 /*Emacs
-*
+ *
  * ,----------------------------------.           ,----------------------------------.
- * |SpitNo|SplitH|SplitV| W+V  | W+H  |           |ProjVC|ProjCo|ProjTe|ProjSw|ProjFi|
+ * |SpitNo|SplitH|SplitV| W+V  | W+H  |           |Magit | CC_C | CC_B |CC_S_F| CC_F |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |BufSel|BufOth|BufHid|BufKil|  W=  |           |Commt |QueryR|      |      |ProjAG|
+ * |BufSel|BufOth|BufHid|BufKil|  W=  |           |Commt |QueryR|RegexR|      | CC_S |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |RegSet|RegJmp|Dired |OrgClI|OrgClO|           |MacroS|MacroE|  Top |Bottom|ProjOc|
+ * |RegSet|RegJmp|Dired |OrgClI|OrgClO|           |MacroS|MacroE|  Top |Bottom|      |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |EMACS |LOWER | Ctrl |    |      | RAISE| L_Alt|
+ *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
  *                  `-------------| ---- |    | Space|------+------.
- *                                |Enter |    |      |
+ *                                | LAlt |    |      |
  *                                `------'    `------'
  */
-[_EMACS] =  LAYOUT( \
-EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_W_INC_V,  EM_W_INC_H,   EM_PROJ_VC, EM_PROJ_COMPILE, EM_PROJ_TEST, EM_PROJ_SWITCH, EM_PROJ_FIND,  \
-EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_HIDE, EM_BUF_KILL, EM_W_BALANCE, EM_COMMENT, EM_QUERY_R,      _______,      _______,        EM_PROJ_AG,    \
-EM_REG_SET,    EM_REG_JUMP,  EM_DIRED,    EM_ORG_CL_I, EM_ORG_CL_O,  EM_MAC_ST,  EM_MAC_END,      EM_TOP,       EM_BOTTOM,      EM_PROJ_OCCUR, \
-_______,       _______,      _______,     _______,     _______,      _______\
-),
+  [_EMACS] =  LAYOUT( \
+    EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_W_INC_V,  EM_W_INC_H,   EM_MAGIT,   EM_C_C_C,   EM_C_C_B,   EM_C_X_C_F, EM_C_C_F, \
+    EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_HIDE, EM_BUF_KILL, EM_W_BALANCE, EM_COMMENT, EM_QUERY_R, EM_REGEX_R, _______,    EM_C_C_S,    \
+    EM_REG_SET,    EM_REG_JUMP,  EM_DIRED,    EM_ORG_CL_I, EM_ORG_CL_O,  EM_MAC_ST,  EM_MAC_END, EM_TOP,     EM_BOTTOM,  _______,  \
+    _______,       _______,      _______,     _______,     _______,      _______\
+    ),
+
+/*Mouse
+ *
+ * ,----------------------------------.           ,----------------------------------.
+ * |      |      |      |      |      |           |      |      |      |      |      |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |      |      |      |      |      |           |Mou L |Mou D |Mou T |Mou R |      |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |      |      |Mou 1 |Mou 2 |Mou 3 |           |Mou WL|Mou WD|Mou WT|Mou WR|MouTgl|
+ * `----------------------------------'           `----------------------------------'
+ *                  ,--------------------.    ,------,-------------.
+ *                  |      |      |      |    |      |      | RAISE|
+ *                  `-------------|      |    |      |------+------.
+ *                                |      |    |      |
+ *                                `------'    `------'
+ */
+  [_MOUSE] =  LAYOUT( \
+    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  \
+    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX,  \
+    XXXXXXX, XXXXXXX, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______,  \
+    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    _______ \
+    ),
+
+
+
 
 /*I3
-*
+ *
  * ,----------------------------------.           ,----------------------------------.
  * |  W_1 |  W_2 |  W_3 |  W_4 |  W_5 |           |ResizL|ResizD|ResizU|ResizR| Dmenu|
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |To_W_1|To_W_2|To_W_3|To_W_4|To_W_5|           |FocusL|FocusD|FocusU|FocusR| Term |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |  I3  | Kill |FullSc|Tabbed|LayTgl|           | MoveL| MoveD| MoveU| MoveR|FocusT|
+ * |  I3  |FocusT|FullSc|Tabbed|LayTgl|           | MoveL| MoveD| MoveU| MoveR| Kill |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
  *                  |SplitH|SplitV|      |    |      | Quit | Reset|
@@ -212,12 +276,12 @@ _______,       _______,      _______,     _______,     _______,      _______\
  *                                |      |    |      |
  *                                `------'    `------'
  */
-[_I3] =  LAYOUT( \
-I3_W1,      I3_W2,           I3_W3,           I3_W4,     I3_W5,            I3_RESIZE_L, I3_RESIZE_D, I3_RESIZE_U, I3_RESIZE_R, I3_DMENU, \
-I3_TO_W1,   I3_TO_W2,        I3_TO_W3,        I3_TO_W4,  I3_TO_W5,         I3_FOCUS_L,  I3_FOCUS_D,  I3_FOCUS_U,  I3_FOCUS_R,  I3_TERM,  \
-_______,    I3_FOCUS_TOGGLE, I3_FS,           I3_TABBED, I3_LAYOUT_TOGGLE, I3_MOVE_L,   I3_MOVE_D,   I3_MOVE_U,   I3_MOVE_R,   I3_KILL,  \
-I3_SPLIT_H, I3_SPLIT_V,      I3_SPLIT_TOGGLE, KC_LGUI,   I3_QUIT,          I3_RESET\
-)
+  [_I3] =  LAYOUT( \
+    I3_W1,      I3_W2,           I3_W3,           I3_W4,     I3_W5,            I3_RESIZE_L, I3_RESIZE_D, I3_RESIZE_U, I3_RESIZE_R, I3_DMENU, \
+    I3_TO_W1,   I3_TO_W2,        I3_TO_W3,        I3_TO_W4,  I3_TO_W5,         I3_FOCUS_L,  I3_FOCUS_D,  I3_FOCUS_U,  I3_FOCUS_R,  I3_TERM,  \
+    _______,    I3_FOCUS_TOGGLE, I3_FS,           I3_TABBED, I3_LAYOUT_TOGGLE, I3_MOVE_L,   I3_MOVE_D,   I3_MOVE_U,   I3_MOVE_R,   I3_KILL,  \
+    I3_SPLIT_H, I3_SPLIT_V,      I3_SPLIT_TOGGLE, KC_LGUI,   I3_QUIT,          I3_RESET\
+    )
 };
 
 void persistant_default_layer_set(uint16_t default_layer) {
@@ -277,45 +341,39 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return false;
     break;
-  case EM_PROJ_FIND:
+  case EM_C_C_F:
     if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"pf");
+      SEND_STRING(SS_LCTRL("c")"f");
     }
     return false;
     break;
-  case EM_PROJ_SWITCH:
+  case EM_C_X_C_F:
     if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"pp");
+      SEND_STRING(SS_LCTRL("x")SS_LCTRL("f"));
     }
     return false;
     break;
-  case EM_PROJ_AG:
+  case EM_C_C_B:
     if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"pss");
+      SEND_STRING(SS_LCTRL("c")"b");
     }
     return false;
     break;
-  case EM_PROJ_VC:
+  case EM_C_C_S:
     if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"pv");
+      SEND_STRING(SS_LCTRL("c")"s");
     }
     return false;
     break;
-  case EM_PROJ_TEST:
+  case EM_MAGIT:
     if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"pP");
+      SEND_STRING(SS_LCTRL("x")"g");
     }
     return false;
     break;
-  case EM_PROJ_COMPILE:
+  case EM_C_C_C:
     if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"pc");
-    }
-    return false;
-    break;
-  case EM_PROJ_OCCUR:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"po");
+      SEND_STRING(SS_LCTRL("c")"c");
     }
     return false;
     break;
@@ -412,6 +470,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   case EM_QUERY_R:
     if (record->event.pressed) {
       SEND_STRING(SS_LALT("%"));
+    }
+    return false;
+    break;
+  case EM_REGEX_R:
+    if (record->event.pressed) {
+      SEND_STRING(SS_LCTRL(SS_LALT("%")));
     }
     return false;
     break;

@@ -83,7 +83,10 @@ enum custom_keycodes {
 };
 
 enum {
-  TD_CTRL_LALT = 0
+  TD_CTRL_LALT = 0,
+  TD_PRN = 1,
+  TD_BRC = 2,
+  TD_CBR = 3
 };
 
 void dance_ctrl_finished(qk_tap_dance_state_t *state, void *user_data) {
@@ -120,6 +123,9 @@ void dance_ctrl_reset(qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {
   /* [TD_CTRL_LALT]  = ACTION_TAP_DANCE_DOUBLE(KC_LCTRL, KC_LALT), */
   [TD_CTRL_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_ctrl_finished, dance_ctrl_reset),
+  [TD_PRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
+  [TD_BRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
+  [TD_CBR] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR)
 };
 
 
@@ -152,9 +158,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Lower
  * ,----------------------------------.           ,----------------------------------.
- * |   1  |   2  |   3  |   :  |   `  |           |   (  |   [  |   {  |   -  |   |  |
+ * |   1  |   2  |   3  |   :  |   `  |           |  ()  |  []  |  {}  |   -  |   |  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   4  |   5  |   6  |   ;  |   '  |           |   )  |   ]  |   }  |   _  |   \  |
+ * |   4  |   5  |   6  |   ;  |   '  |           |      |      |      |   _  |   \  |
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |   7  |   8  |   9  |   0  |   "  |           |      |      |      |   <  |   >  |
  * `----------------------------------'           `----------------------------------'
@@ -165,9 +171,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                `------'    `------'
  */
   [_LOWER] = LAYOUT(\
-    KC_1,    KC_2,    KC_3,    KC_COLN, KC_GRV,   KC_LPRN, KC_LBRC, KC_LCBR, KC_MINS,   KC_PIPE, \
-    KC_4,    KC_5,    KC_6,    KC_SCLN, KC_QUOT,  KC_RPRN, KC_RBRC, KC_RCBR, KC_UNDS,   KC_BSLS, \
-    KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO,  _______, _______, _______, KC_LT,   KC_GT, \
+    KC_1,    KC_2,    KC_3,    KC_COLN, KC_GRV,  TD(TD_PRN), TD(TD_BRC), TD(TD_CBR), KC_MINS, KC_PIPE, \
+    KC_4,    KC_5,    KC_6,    KC_SCLN, KC_QUOT, _______,    _______,    _______,    KC_UNDS, KC_BSLS, \
+    KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO, _______,    _______,    _______,    KC_LT,   KC_GT, \
     _______, _______, _______, KC_BSPC, _______, _______                \
     ),
 

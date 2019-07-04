@@ -86,7 +86,10 @@ enum {
   TD_CTRL_LALT = 0,
   TD_PRN = 1,
   TD_BRC = 2,
-  TD_CBR = 3
+  TD_CBR = 3,
+  TD_COL = 4,
+  TD_QUO = 5,
+  TD_LGT = 6
 };
 
 void dance_ctrl_finished(qk_tap_dance_state_t *state, void *user_data) {
@@ -125,7 +128,10 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_CTRL_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_ctrl_finished, dance_ctrl_reset),
   [TD_PRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
   [TD_BRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
-  [TD_CBR] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR)
+  [TD_CBR] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR),
+  [TD_COL] = ACTION_TAP_DANCE_DOUBLE(KC_COLN, KC_SCLN),
+  [TD_QUO] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQUO),
+  [TD_LGT] = ACTION_TAP_DANCE_DOUBLE(KC_LT, KC_GT)
 };
 
 
@@ -158,11 +164,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Lower
  * ,----------------------------------.           ,----------------------------------.
- * |   1  |   2  |   3  |   :  |   `  |           |  ()  |  []  |  {}  |   -  |   |  |
+ * |   1  |   2  |   3  |   4  |   5  |           |  ()  |  []  |  {}  |  <>  |   |  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   4  |   5  |   6  |   ;  |   '  |           |      |      |      |   _  |   \  |
+ * |   6  |   7  |   8  |   9  |   0  |           | Left | Down |  Up  | Right|   \  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   7  |   8  |   9  |   0  |   "  |           |      |      |      |   <  |   >  |
+ * |      |      |      |      |      |           |  :;  |  '"  |   `  |   -  |   _  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
  *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
@@ -171,10 +177,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                `------'    `------'
  */
   [_LOWER] = LAYOUT(\
-    KC_1,    KC_2,    KC_3,    KC_COLN, KC_GRV,  TD(TD_PRN), TD(TD_BRC), TD(TD_CBR), KC_MINS, KC_PIPE, \
-    KC_4,    KC_5,    KC_6,    KC_SCLN, KC_QUOT, _______,    _______,    _______,    KC_UNDS, KC_BSLS, \
-    KC_7,    KC_8,    KC_9,    KC_0,    KC_DQUO, _______,    _______,    _______,    KC_LT,   KC_GT, \
-    _______, _______, _______, KC_BSPC, _______, _______                \
+    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    TD(TD_PRN), TD(TD_BRC), TD(TD_CBR), TD(TD_LGT), KC_PIPE, \
+    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LEFT,    KC_DOWN,    KC_UP,      KC_RIGHT,   KC_BSLS, \
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(TD_COL), TD(TD_QUO), KC_GRV,     KC_MINS,    KC_UNDS, \
+    _______, _______, _______, KC_BSPC, _______, _______ \
     ),
 
 /* Raise
@@ -183,19 +189,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |CapsLk|   ~  |   /  |   -  |  =   |           |  !   |  ?   |   #  |   &  |  GUI |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |  Tab | Left | Down |  Up  | Right|           |      |      |      |      |MouTgl|
+ * |      |      |      |      |      |           |      |      |      |      |Moutgl|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
- *                  `-------------| ---- |    | Space|------+------.
- *                                | LAlt |    |      |
+ *                  |LOWER |EMACS |      |    |      | Enter| RAISE|
+ *                  `-------------| Tab  |    | Space|------+------.
+ *                                |      |    |      |
  *                                `------'    `------'
  */
   [_RAISE] = LAYOUT( \
     KC_ESC,  KC_CIRC, KC_ASTR,  KC_PLUS,  KC_PERC, ALGR(LSFT(KC_1)), ALGR(KC_SLSH), KC_AT,   KC_DOLLAR, KC_DEL,     \
     KC_CAPS, KC_TILD, KC_SLASH, KC_MINUS, KC_EQL,  KC_EXLM,          KC_QUES,       KC_HASH, KC_AMPR,   KC_LGUI,    \
-    KC_TAB,  KC_LEFT, KC_DOWN,  KC_UP,    KC_RGHT, _______,          _______,       _______, _______,   TG(_MOUSE), \
-    _______,  _______, _______,  _______, _______, _______\
+    XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX,          XXXXXXX,       XXXXXXX, XXXXXXX,   TG(_MOUSE), \
+    _______, _______, KC_TAB,   _______,  _______, _______\
     ),
 
 /*Adjust(Lower+Raise)
@@ -215,8 +221,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
   [_ADJUST] =  LAYOUT( \
     KC_F1,   KC_F2,   KC_F3,    KC_F4,   KC_F5,   KC__MUTE, KC__VOLDOWN, KC__VOLUP,           KC_F14,        KC_F15,  \
-    KC_F6,   KC_F7,   KC_F8,    KC_F9,   KC_F10,  KC_HOME,  KC_PGDN,     KC_PGUP,             KC_END,        _______, \
-    KC_F11,  KC_F12,  _______, _______, RESET,   _______,  _______,     LCTL(LSFT(KC_PSCR)), LSFT(KC_PSCR), KC_PSCR, \
+    KC_F6,   KC_F7,   KC_F8,    KC_F9,   KC_F10,  KC_HOME,  KC_PGDN,     KC_PGUP,             KC_END,        XXXXXXX, \
+    KC_F11,  KC_F12,  XXXXXXX,  XXXXXXX, RESET,   XXXXXXX,  XXXXXXX,     LCTL(LSFT(KC_PSCR)), LSFT(KC_PSCR), KC_PSCR, \
     _______, _______, _______,  _______, _______, _______\
     ),
 
@@ -237,8 +243,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
   [_EMACS] =  LAYOUT( \
     EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_W_INC_V,  EM_W_INC_H,   EM_MAGIT,   EM_C_C_C,   EM_C_C_B,   EM_C_X_C_F, EM_C_C_F, \
-    EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_HIDE, EM_BUF_KILL, EM_W_BALANCE, EM_COMMENT, EM_QUERY_R, EM_REGEX_R, _______,    EM_C_C_S,    \
-    EM_REG_SET,    EM_REG_JUMP,  EM_DIRED,    EM_ORG_CL_I, EM_ORG_CL_O,  EM_MAC_ST,  EM_MAC_END, EM_TOP,     EM_BOTTOM,  _______,  \
+    EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_HIDE, EM_BUF_KILL, EM_W_BALANCE, EM_COMMENT, EM_QUERY_R, EM_REGEX_R, XXXXXXX,    EM_C_C_S,    \
+    EM_REG_SET,    EM_REG_JUMP,  EM_DIRED,    EM_ORG_CL_I, EM_ORG_CL_O,  EM_MAC_ST,  EM_MAC_END, EM_TOP,     EM_BOTTOM,  XXXXXXX,  \
     _______,       _______,      _______,     _______,     _______,      _______\
     ),
 

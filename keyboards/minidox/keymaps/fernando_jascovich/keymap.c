@@ -1,151 +1,14 @@
-#include QMK_KEYBOARD_H
+#include "keymap.h"
+#include "tapdance.c"
 
 extern keymap_config_t keymap_config;
 
-// Each layer gets a name for readability, which is then used in the keymap matrix below.
-// The underscores don't mean anything - you can have a layer called STUFF or any other name.
-// Layer names don't all need to be of the same length, obviously, and you can also skip them
-// entirely and just use numbers.
-#define _QWERTY 0
-#define _LOWER  1
-#define _RAISE  2
-#define _EMACS  5
-#define _I3     6
-#define _MOUSE  10
-#define _ADJUST 16
-
-enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  LOWER,
-  RAISE,
-  EM_BUF_SELECT,
-  EM_BUF_OTHER,
-  EM_BUF_HIDE,
-  EM_BUF_KILL,
-  EM_W_INC_V,
-  EM_W_INC_H,
-  EM_W_BALANCE,
-  EM_C_C_F,
-  EM_C_X_C_F,
-  EM_C_C_B,
-  EM_C_C_S,
-  EM_MAGIT,
-  EM_C_C_C,
-  EM_SPLIT_NONE,
-  EM_SPLIT_V,
-  EM_SPLIT_H,
-  EM_ORG_CL_I,
-  EM_ORG_CL_O,
-  EM_COMMENT,
-  EM_TOP,
-  EM_BOTTOM,
-  EM_REG_SET,
-  EM_REG_JUMP,
-  EM_MAC_ST,
-  EM_MAC_END,
-  EM_QUERY_R,
-  EM_REGEX_R,
-  EM_DIRED,
-  I3_W1,
-  I3_W2,
-  I3_W3,
-  I3_W4,
-  I3_W5,
-  I3_TO_W1,
-  I3_TO_W2,
-  I3_TO_W3,
-  I3_TO_W4,
-  I3_TO_W5,
-  I3_SPLIT_H,
-  I3_SPLIT_V,
-  I3_SPLIT_TOGGLE,
-  I3_FS,
-  I3_TABBED,
-  I3_LAYOUT_TOGGLE,
-  I3_RESIZE_L,
-  I3_RESIZE_D,
-  I3_RESIZE_U,
-  I3_RESIZE_R,
-  I3_DMENU,
-  I3_FOCUS_L,
-  I3_FOCUS_D,
-  I3_FOCUS_U,
-  I3_FOCUS_R,
-  I3_FOCUS_TOGGLE,
-  I3_TERM,
-  I3_MOVE_L,
-  I3_MOVE_D,
-  I3_MOVE_U,
-  I3_MOVE_R,
-  I3_QUIT,
-  I3_RESET,
-  I3_KILL,
-};
-
-enum {
-  TD_CTRL_LALT = 0,
-  TD_PRN = 1,
-  TD_BRC = 2,
-  TD_CBR = 3,
-  TD_COL = 4,
-  TD_QUO = 5,
-  TD_LGT = 6
-};
-
-void dance_ctrl_finished(qk_tap_dance_state_t *state, void *user_data) {
-  switch(state->count) {
-  case 1:
-    register_code(KC_LCTRL);
-    break;
-  case 2:
-    register_code(KC_LALT);
-    break;
-  case 3:
-    register_code(KC_LCTRL);
-    register_code(KC_LALT);
-    break;
-  }
-}
-
-void dance_ctrl_reset(qk_tap_dance_state_t *state, void *user_data) {
-  switch(state->count) {
-  case 1:
-    unregister_code(KC_LCTRL);
-    break;
-  case 2:
-    unregister_code(KC_LALT);
-    break;
-  case 3:
-    unregister_code(KC_LCTRL);
-    unregister_code(KC_LALT);
-    break;
-  }
-}
-
-//Tap Dance Definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
-  /* [TD_CTRL_LALT]  = ACTION_TAP_DANCE_DOUBLE(KC_LCTRL, KC_LALT), */
-  [TD_CTRL_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_ctrl_finished, dance_ctrl_reset),
-  [TD_PRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
-  [TD_BRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
-  [TD_CBR] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR),
-  [TD_COL] = ACTION_TAP_DANCE_DOUBLE(KC_COLN, KC_SCLN),
-  [TD_QUO] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQUO),
-  [TD_LGT] = ACTION_TAP_DANCE_DOUBLE(KC_LT, KC_GT)
-};
-
-
-// Fillers to make layering more clear
-#define _______ KC_TRNS
-#define XXXXXXX KC_NO
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
 /* Qwerty
  * ,----------------------------------.           ,----------------------------------.
  * |   Q  |   W  |   E  |   R  |   T  |           |   Y  |   U  |   I  |   O  |   P  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   A  |   S  |   D  |   F  |   G  |           |   H  |   J  |   K  |   L  | Shift|
+ * |   A  |   S  |   D  |   F  |   G  |           |   H  |   J  |   K  |   L  |TD_SFT|
  * |------+------+------+------+------|           |------+------+------+------+------|
  * | Z/I3 |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  | /|AGR|
  * `----------------------------------'           `----------------------------------'
@@ -157,18 +20,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
   [_QWERTY] = LAYOUT( \
     KC_Q,          KC_W,       KC_E,             KC_R,     KC_T,     KC_Y, KC_U, KC_I,    KC_O,   KC_P, \
-    KC_A,          KC_S,       KC_D,             KC_F,     KC_G,     KC_H, KC_J, KC_K,    KC_L,   KC_LSHIFT, \
+    KC_A,          KC_S,       KC_D,             KC_F,     KC_G,     KC_H, KC_J, KC_K,    KC_L,   TD(TD_SHIFT), \
     LT(_I3, KC_Z), KC_X,       KC_C,             KC_V,     KC_B,     KC_N, KC_M, KC_COMM, KC_DOT, ALGR_T(KC_SLASH), \
     LOWER,         MO(_EMACS), TD(TD_CTRL_LALT), KC_SPACE, KC_ENTER, RAISE \
     ),
 
 /* Lower
  * ,----------------------------------.           ,----------------------------------.
- * |   1  |   2  |   3  |   4  |   5  |           |  ()  |  []  |  {}  |  <>  |   |  |
+ * |   1  |   2  |   3  |   4  |   5  |           |   (  |   [  |   {  |   <  |   `  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |   6  |   7  |   8  |   9  |   0  |           | Left | Down |  Up  | Right|   \  |
+ * |   6  |   7  |   8  |   9  |   0  |           | Left | Down |  Up  | Right|   |  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |      |      |      |      |      |           |  :;  |  '"  |   `  |   -  |   _  |
+ * |      |      |      |      |      |           |   )  |   ]  |   }  |   >  |   \  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
  *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
@@ -177,9 +40,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                `------'    `------'
  */
   [_LOWER] = LAYOUT(\
-    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    TD(TD_PRN), TD(TD_BRC), TD(TD_CBR), TD(TD_LGT), KC_PIPE, \
-    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LEFT,    KC_DOWN,    KC_UP,      KC_RIGHT,   KC_BSLS, \
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(TD_COL), TD(TD_QUO), KC_GRV,     KC_MINS,    KC_UNDS, \
+    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_LPRN, KC_LBRC, KC_LCBR, KC_LT,    KC_GRV, \
+    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_PIPE, \
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_RPRN, KC_RBRC, KC_RCBR, KC_GT,    KC_BSLS, \
     _______, _______, _______, KC_BSPC, _______, _______ \
     ),
 
@@ -189,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |CapsLk|   ~  |   /  |   -  |  =   |           |  !   |  ?   |   #  |   &  |  GUI |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |      |      |      |      |      |           |      |      |      |      |Moutgl|
+ * |   :  |   ;  |   '  |   "  |  _   |           |      |      |      |      |Moutgl|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
  *                  |LOWER |EMACS |      |    |      | Enter| RAISE|
@@ -200,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_RAISE] = LAYOUT( \
     KC_ESC,  KC_CIRC, KC_ASTR,  KC_PLUS,  KC_PERC, ALGR(LSFT(KC_1)), ALGR(KC_SLSH), KC_AT,   KC_DOLLAR, KC_DEL,     \
     KC_CAPS, KC_TILD, KC_SLASH, KC_MINUS, KC_EQL,  KC_EXLM,          KC_QUES,       KC_HASH, KC_AMPR,   KC_LGUI,    \
-    XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX,          XXXXXXX,       XXXXXXX, XXXXXXX,   TG(_MOUSE), \
+    KC_COLN, KC_SCLN, KC_QUOT,  KC_DQUO,  KC_UNDS, XXXXXXX,          XXXXXXX,       XXXXXXX, XXXXXXX,   TG(_MOUSE), \
     _______, _______, KC_TAB,   _______,  _______, _______\
     ),
 

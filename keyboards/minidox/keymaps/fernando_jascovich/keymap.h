@@ -4,7 +4,6 @@
 #define _LOWER  1
 #define _RAISE  2
 #define _EMACS  5
-#define _I3     6
 #define _MOUSE  10
 #define _ADJUST 16
 
@@ -48,38 +47,5 @@ enum custom_keycodes {
   EM_QUERY_R,
   EM_REGEX_R,
   EM_DIRED,
-  I3_W1,
-  I3_W2,
-  I3_W3,
-  I3_W4,
-  I3_W5,
-  I3_TO_W1,
-  I3_TO_W2,
-  I3_TO_W3,
-  I3_TO_W4,
-  I3_TO_W5,
-  I3_SPLIT_H,
-  I3_SPLIT_V,
-  I3_SPLIT_TOGGLE,
-  I3_FS,
-  I3_TABBED,
-  I3_LAYOUT_TOGGLE,
-  I3_RESIZE_L,
-  I3_RESIZE_D,
-  I3_RESIZE_U,
-  I3_RESIZE_R,
-  I3_DMENU,
-  I3_FOCUS_L,
-  I3_FOCUS_D,
-  I3_FOCUS_U,
-  I3_FOCUS_R,
-  I3_FOCUS_TOGGLE,
-  I3_TERM,
-  I3_MOVE_L,
-  I3_MOVE_D,
-  I3_MOVE_U,
-  I3_MOVE_R,
-  I3_QUIT,
-  I3_RESET,
-  I3_KILL,
+  EM_ZAP,
 };

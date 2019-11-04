@@ -10,19 +10,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |   A  |   S  |   D  |   F  |   G  |           |   H  |   J  |   K  |   L  |TD_SFT|
  * |------+------+------+------+------|           |------+------+------+------+------|
- * | Z/I3 |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  | /|AGR|
+ * |   Z  |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  | /|AGR|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
+ *                  |LOWER |EMACS | Ctrl |    |      |RET/GU| RAISE|
  *                  `-------------| ---- |    | Space|------+------.
  *                                | LAlt |    |      |
  *                                `------'    `------'
  */
   [_QWERTY] = LAYOUT( \
-    KC_Q,          KC_W,       KC_E,             KC_R,     KC_T,     KC_Y, KC_U, KC_I,    KC_O,   KC_P, \
-    KC_A,          KC_S,       KC_D,             KC_F,     KC_G,     KC_H, KC_J, KC_K,    KC_L,   TD(TD_SHIFT), \
-    LT(_I3, KC_Z), KC_X,       KC_C,             KC_V,     KC_B,     KC_N, KC_M, KC_COMM, KC_DOT, ALGR_T(KC_SLASH), \
-    LOWER,         MO(_EMACS), TD(TD_CTRL_LALT), KC_SPACE, KC_ENTER, RAISE \
+    KC_Q,  KC_W,       KC_E,             KC_R,     KC_T,              KC_Y, KC_U, KC_I,    KC_O,   KC_P, \
+    KC_A,  KC_S,       KC_D,             KC_F,     KC_G,              KC_H, KC_J, KC_K,    KC_L,   TD(TD_SHIFT), \
+    KC_Z,  KC_X,       KC_C,             KC_V,     KC_B,              KC_N, KC_M, KC_COMM, KC_DOT, ALGR_T(KC_SLASH), \
+    LOWER, MO(_EMACS), TD(TD_CTRL_LALT), KC_SPACE, LGUI_T(KC_ENTER),  RAISE \
     ),
 
 /* Lower
@@ -107,7 +107,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_EMACS] =  LAYOUT( \
     EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_W_INC_V,  EM_W_INC_H,   EM_MAGIT,   EM_C_C_C,   EM_C_C_B,   EM_C_X_C_F, EM_C_C_F, \
     EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_HIDE, EM_BUF_KILL, EM_W_BALANCE, EM_COMMENT, EM_QUERY_R, EM_REGEX_R, XXXXXXX,    EM_C_C_S,    \
-    EM_REG_SET,    EM_REG_JUMP,  EM_DIRED,    EM_ORG_CL_I, EM_ORG_CL_O,  EM_MAC_ST,  EM_MAC_END, EM_TOP,     EM_BOTTOM,  XXXXXXX,  \
+    EM_REG_SET,    EM_REG_JUMP,  EM_DIRED,    EM_ORG_CL_I, EM_ORG_CL_O,  EM_MAC_ST,  EM_MAC_END, EM_TOP,     EM_BOTTOM,  EM_ZAP,  \
     _______,       _______,      _______,     _______,     _______,      _______\
     ),
 
@@ -131,31 +131,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX,  \
     XXXXXXX, XXXXXXX, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______,  \
     XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    _______ \
-    ),
-
-
-
-
-/*I3
- *
- * ,----------------------------------.           ,----------------------------------.
- * |  W_1 |  W_2 |  W_3 |  W_4 |  W_5 |           |ResizL|ResizD|ResizU|ResizR| Dmenu|
- * |------+------+------+------+------|           |------+------+------+------+------|
- * |To_W_1|To_W_2|To_W_3|To_W_4|To_W_5|           |FocusL|FocusD|FocusU|FocusR| Term |
- * |------+------+------+------+------|           |------+------+------+------+------|
- * |  I3  |FocusT|FullSc|Tabbed|LayTgl|           | MoveL| MoveD| MoveU| MoveR| Kill |
- * `----------------------------------'           `----------------------------------'
- *                  ,--------------------.    ,------,-------------.
- *                  |SplitH|SplitV|      |    |      | Quit | Reset|
- *                  `-------------|SplitT|    |  GUI |------+------.
- *                                |      |    |      |
- *                                `------'    `------'
- */
-  [_I3] =  LAYOUT( \
-    I3_W1,      I3_W2,           I3_W3,           I3_W4,     I3_W5,            I3_RESIZE_L, I3_RESIZE_D, I3_RESIZE_U, I3_RESIZE_R, I3_DMENU, \
-    I3_TO_W1,   I3_TO_W2,        I3_TO_W3,        I3_TO_W4,  I3_TO_W5,         I3_FOCUS_L,  I3_FOCUS_D,  I3_FOCUS_U,  I3_FOCUS_R,  I3_TERM,  \
-    _______,    I3_FOCUS_TOGGLE, I3_FS,           I3_TABBED, I3_LAYOUT_TOGGLE, I3_MOVE_L,   I3_MOVE_D,   I3_MOVE_U,   I3_MOVE_R,   I3_KILL,  \
-    I3_SPLIT_H, I3_SPLIT_V,      I3_SPLIT_TOGGLE, KC_LGUI,   I3_QUIT,          I3_RESET\
     )
 };
 
@@ -360,208 +335,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return false;
     break;
-  case I3_W1:
+  case EM_ZAP:
     if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("1"));
+      SEND_STRING(SS_LALT("z"));
     }
     return false;
     break;
-  case I3_W2:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("2"));
-    }
-    return false;
-    break;
-  case I3_W3:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("3"));
-    }
-    return false;
-    break;
-  case I3_W4:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("4"));
-    }
-    return false;
-    break;
-  case I3_W5:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("5"));
-    }
-    return false;
-    break;
-  case I3_TO_W1:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("1")));
-    }
-    return false;
-    break;
-  case I3_TO_W2:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("2")));
-    }
-    return false;
-    break;
-  case I3_TO_W3:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("3")));
-    }
-    return false;
-    break;
-  case I3_TO_W4:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("4")));
-    }
-    return false;
-    break;
-  case I3_TO_W5:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("5")));
-    }
-    return false;
-    break;
-  case I3_SPLIT_H:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("h"));
-    }
-    return false;
-    break;
-  case I3_SPLIT_V:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("v"));
-    }
-    return false;
-    break;
-  case I3_SPLIT_TOGGLE:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("e"));
-    }
-    return false;
-    break;
-  case I3_FS:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("f"));
-    }
-    return false;
-    break;
-  case I3_TABBED:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("w"));
-    }
-    return false;
-    break;
-  case I3_LAYOUT_TOGGLE:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT(" ")));
-    }
-    return false;
-    break;
-  case I3_RESIZE_L:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("r")"j"SS_TAP(X_ENTER));
-    }
-    return false;
-    break;
-  case I3_RESIZE_D:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("r")"k"SS_TAP(X_ENTER));
-    }
-    return false;
-    break;
-  case I3_RESIZE_U:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("r")"l"SS_TAP(X_ENTER));
-    }
-    return false;
-    break;
-  case I3_RESIZE_R:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("r")";"SS_TAP(X_ENTER));
-    }
-    return false;
-    break;
-  case I3_DMENU:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("d"));
-    }
-    return false;
-    break;
-  case I3_FOCUS_L:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("j"));
-    }
-    return false;
-    break;
-  case I3_FOCUS_D:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("k"));
-    }
-    return false;
-    break;
-  case I3_FOCUS_U:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI("l"));
-    }
-    return false;
-    break;
-  case I3_FOCUS_R:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(";"));
-    }
-    return false;
-    break;
-  case I3_FOCUS_TOGGLE:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(" "));
-    }
-    return false;
-    break;
-  case I3_TERM:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_ENTER)));
-    }
-    return false;
-    break;
-  case I3_MOVE_L:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("j")));
-    }
-    return false;
-    break;
-  case I3_MOVE_D:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("k")));
-    }
-    return false;
-    break;
-  case I3_MOVE_U:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("l")));
-    }
-    return false;
-    break;
-  case I3_MOVE_R:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT(";")));
-    }
-    return false;
-    break;
-  case I3_QUIT:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("e")));
-    }
-    return false;
-    break;
-  case I3_RESET:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("r")));
-    }
-    return false;
-    break;
-  case I3_KILL:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT("q")));
-    }
   }
   return true;
 }

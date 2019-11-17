@@ -42,7 +42,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_LOWER] = LAYOUT(\
     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_LPRN, KC_RPRN, KC_LBRC, KC_RBRC, KC_GRV, \
     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_PIPE, \
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LCBR, KC_RCBR, KC_LT, KC_GT,  KC_BSLS,   \
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LCBR, KC_RCBR, KC_LT, KC_GT,  KC_BSLS, \
     _______, _______, _______, KC_BSPC, _______, _______ \
     ),
 
@@ -92,11 +92,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*Emacs
  *
  * ,----------------------------------.           ,----------------------------------.
- * |SpitNo|SplitH|SplitV| W+V  | W+H  |           |Magit | CC_C | CC_B |CC_S_F| CC_F |
+ * |SpitNo|SplitH|SplitV| W+V  | W+H  |           |      |      |      |      |      |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |BufSel|BufOth|BufHid|BufKil|  W=  |           |Commt |QueryR|RegexR|      | CC_S |
+ * |BufSel|BufOth|BufHid|BufKil|      |           |Commt |QueryR|RegexR|      |      |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * |RegSet|RegJmp|Dired |OrgClI|OrgClO|           |MacroS|MacroE|  Top |Bottom|      |
+ * |RegSet|RegJmp|      |OrgClI|OrgClO|           |MacroS|MacroE|  Top |Bottom|EM_ZAP|
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
  *                  |LOWER |EMACS | Ctrl |    |      | Enter| RAISE|
@@ -105,9 +105,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                `------'    `------'
  */
   [_EMACS] =  LAYOUT( \
-    EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_W_INC_V,  EM_W_INC_H,   EM_MAGIT,   EM_C_C_C,   EM_C_C_B,   EM_C_X_C_F, EM_C_C_F, \
-    EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_HIDE, EM_BUF_KILL, EM_W_BALANCE, EM_COMMENT, EM_QUERY_R, EM_REGEX_R, XXXXXXX,    EM_C_C_S,    \
-    EM_REG_SET,    EM_REG_JUMP,  EM_DIRED,    EM_ORG_CL_I, EM_ORG_CL_O,  EM_MAC_ST,  EM_MAC_END, EM_TOP,     EM_BOTTOM,  EM_ZAP,  \
+    EM_SPLIT_NONE, EM_SPLIT_H,   EM_SPLIT_V,  EM_W_INC_V,  EM_W_INC_H,   XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,   XXXXXXX, \
+    EM_BUF_SELECT, EM_BUF_OTHER, EM_BUF_HIDE, EM_BUF_KILL, XXXXXXX,      EM_COMMENT, EM_QUERY_R, EM_REGEX_R, XXXXXXX,   XXXXXXX,    \
+    EM_REG_SET,    EM_REG_JUMP,  XXXXXXX,     EM_ORG_CL_I, EM_ORG_CL_O,  EM_MAC_ST,  EM_MAC_END, EM_TOP,     EM_BOTTOM, EM_ZAP,  \
     _______,       _______,      _______,     _______,     _______,      _______\
     ),
 
@@ -139,208 +139,104 @@ void persistant_default_layer_set(uint16_t default_layer) {
   default_layer_set(default_layer);
 }
 
+bool emacs_key(char *str, keyrecord_t *record) {
+    if (record->event.pressed) {
+        send_string(str);
+    }
+    return false;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-  case QWERTY:
-    if (record->event.pressed) {
-      persistant_default_layer_set(1UL<<_QWERTY);
+    switch (keycode) {
+    case QWERTY:
+        if (record->event.pressed) {
+            persistant_default_layer_set(1UL<<_QWERTY);
+        }
+        return false;
+        break;
+    case LOWER:
+        if (record->event.pressed) {
+            layer_on(_LOWER);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        } else {
+            layer_off(_LOWER);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        }
+        return false;
+        break;
+    case RAISE:
+        if (record->event.pressed) {
+            layer_on(_RAISE);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        } else {
+            layer_off(_RAISE);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        }
+        return false;
+        break;
+    case EM_BUF_SELECT:
+        return emacs_key(SS_LCTRL("x")"b", record);
+        break;
+    case EM_BUF_OTHER:
+        return emacs_key(SS_LCTRL("x")"o", record);
+        break;
+    case EM_BUF_HIDE:
+        return emacs_key(SS_LCTRL("x")"0", record);
+        break;
+    case EM_BUF_KILL:
+        return emacs_key(SS_LCTRL("x")"k"SS_TAP(X_ENTER), record);
+        break;
+    case EM_SPLIT_NONE:
+        return emacs_key(SS_LCTRL("x")"1", record);
+        break;
+    case EM_SPLIT_V:
+        return emacs_key(SS_LCTRL("x")"3", record);
+        break;
+    case EM_SPLIT_H:
+        return emacs_key(SS_LCTRL("x")"2", record);
+        break;
+    case EM_ORG_CL_I:
+        return emacs_key(SS_DOWN(X_LCTRL)"cxi"SS_UP(X_LCTRL), record);
+        break;
+    case EM_ORG_CL_O:
+        return emacs_key(SS_DOWN(X_LCTRL)"cxo"SS_UP(X_LCTRL), record);
+        break;
+    case EM_COMMENT:
+        return emacs_key(SS_DOWN(X_LCTRL)"x;"SS_UP(X_LCTRL), record);
+        break;
+    case EM_TOP:
+        return emacs_key(SS_LALT("<"), record);
+        break;
+    case EM_BOTTOM:
+        return emacs_key(SS_LALT(">"), record);
+        break;
+    case EM_W_INC_H:
+        return emacs_key(SS_LCTRL("x")"}", record);
+        break;
+    case EM_W_INC_V:
+        return emacs_key(SS_LCTRL("x")"^", record);
+        break;
+    case EM_REG_SET:
+        return emacs_key(SS_LCTRL("x")"r 1", record);
+        break;
+    case EM_REG_JUMP:
+        return emacs_key(SS_LCTRL("x")"rj1", record);
+        break;
+    case EM_MAC_ST:
+        return emacs_key(SS_LCTRL("x")"(", record);
+        break;
+    case EM_MAC_END:
+        return emacs_key(SS_LCTRL("x")")", record);
+        break;
+    case EM_QUERY_R:
+        return emacs_key(SS_LALT("%"), record);
+        break;
+    case EM_REGEX_R:
+        return emacs_key(SS_LCTRL(SS_LALT("%")), record);
+        break;
+    case EM_ZAP:
+        return emacs_key(SS_LALT("z"), record);
+        break;
     }
-    return false;
-    break;
-  case LOWER:
-    if (record->event.pressed) {
-      layer_on(_LOWER);
-      update_tri_layer(_LOWER, _RAISE, _ADJUST);
-    } else {
-      layer_off(_LOWER);
-      update_tri_layer(_LOWER, _RAISE, _ADJUST);
-    }
-    return false;
-    break;
-  case RAISE:
-    if (record->event.pressed) {
-      layer_on(_RAISE);
-      update_tri_layer(_LOWER, _RAISE, _ADJUST);
-    } else {
-      layer_off(_RAISE);
-      update_tri_layer(_LOWER, _RAISE, _ADJUST);
-    }
-    return false;
-    break;
-  case EM_BUF_SELECT:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"b");
-    }
-    return false;
-    break;
-  case EM_BUF_OTHER:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"o");
-    }
-    return false;
-    break;
-  case EM_BUF_HIDE:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"0");
-    }
-    return false;
-    break;
-  case EM_BUF_KILL:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"k"SS_TAP(X_ENTER));
-    }
-    return false;
-    break;
-  case EM_C_C_F:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"f");
-    }
-    return false;
-    break;
-  case EM_C_X_C_F:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")SS_LCTRL("f"));
-    }
-    return false;
-    break;
-  case EM_C_C_B:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"b");
-    }
-    return false;
-    break;
-  case EM_C_C_S:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"s");
-    }
-    return false;
-    break;
-  case EM_MAGIT:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"g");
-    }
-    return false;
-    break;
-  case EM_C_C_C:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("c")"c");
-    }
-    return false;
-    break;
-  case EM_SPLIT_NONE:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"1");
-    }
-    return false;
-    break;
-  case EM_SPLIT_V:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"3");
-    }
-    return false;
-    break;
-  case EM_SPLIT_H:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"2");
-    }
-    return false;
-    break;
-  case EM_ORG_CL_I:
-    if (record->event.pressed) {
-      SEND_STRING(SS_DOWN(X_LCTRL)"cxi"SS_UP(X_LCTRL));
-    }
-    return false;
-    break;
-  case EM_ORG_CL_O:
-    if (record->event.pressed) {
-      SEND_STRING(SS_DOWN(X_LCTRL)"cxo"SS_UP(X_LCTRL));
-    }
-    return false;
-    break;
-  case EM_COMMENT:
-    if (record->event.pressed) {
-      SEND_STRING(SS_DOWN(X_LCTRL)"x;"SS_UP(X_LCTRL));
-    }
-    return false;
-    break;
-  case EM_TOP:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LALT("<"));
-    }
-    return false;
-    break;
-  case EM_BOTTOM:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LALT(">"));
-    }
-    return false;
-    break;
-  case EM_W_INC_H:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"}");
-    }
-    return false;
-    break;
-  case EM_W_INC_V:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"^");
-    }
-    return false;
-    break;
-  case EM_W_BALANCE:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"+");
-    }
-    return false;
-    break;
-  case EM_REG_SET:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"r 1");
-    }
-    return false;
-    break;
-  case EM_REG_JUMP:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"rj1");
-    }
-    return false;
-    break;
-  case EM_MAC_ST:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"(");
-    }
-    return false;
-    break;
-  case EM_MAC_END:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")")");
-    }
-    return false;
-    break;
-  case EM_QUERY_R:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LALT("%"));
-    }
-    return false;
-    break;
-  case EM_REGEX_R:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL(SS_LALT("%")));
-    }
-    return false;
-    break;
-  case EM_DIRED:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTRL("x")"d");
-    }
-    return false;
-    break;
-  case EM_ZAP:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LALT("z"));
-    }
-    return false;
-    break;
-  }
-  return true;
+    return true;
 }

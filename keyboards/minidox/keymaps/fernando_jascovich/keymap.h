@@ -12,7 +12,8 @@
 
 enum {
   TD_CTRL_LALT = 0,
-  TD_SHIFT = 1
+  TD_SHIFT = 1,
+  TD_ALT_EMACS = 2
 };
 
 enum custom_keycodes {
@@ -25,13 +26,6 @@ enum custom_keycodes {
   EM_BUF_KILL,
   EM_W_INC_V,
   EM_W_INC_H,
-  EM_W_BALANCE,
-  EM_C_C_F,
-  EM_C_X_C_F,
-  EM_C_C_B,
-  EM_C_C_S,
-  EM_MAGIT,
-  EM_C_C_C,
   EM_SPLIT_NONE,
   EM_SPLIT_V,
   EM_SPLIT_H,
@@ -46,6 +40,5 @@ enum custom_keycodes {
   EM_MAC_END,
   EM_QUERY_R,
   EM_REGEX_R,
-  EM_DIRED,
   EM_ZAP,
 };

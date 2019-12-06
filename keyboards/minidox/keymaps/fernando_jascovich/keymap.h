@@ -1,8 +1,9 @@
 #include QMK_KEYBOARD_H
 
 #define _QWERTY 0
-#define _LOWER  1
-#define _RAISE  2
+#define _DVORAK 1
+#define _LOWER  3
+#define _RAISE  4
 #define _EMACS  5
 #define _MOUSE  10
 #define _ADJUST 16
@@ -17,8 +18,7 @@ enum {
 };
 
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  LOWER,
+  LOWER = SAFE_RANGE,
   RAISE,
   EM_BUF_SELECT,
   EM_BUF_OTHER,

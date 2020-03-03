@@ -1,4 +1,4 @@
-/* #define MASTER_RIGHT */
+#define MASTER_RIGHT
 
 #define MOUSEKEY_DELAY             80
 #define MOUSEKEY_INTERVAL          40

@@ -18,6 +18,9 @@
 
 #include "quantum.h"
 
+//readability
+#define ___ KC_NO
+
 /* This is a shortcut to help you visually see your layout.
  *
  * The first section contains all of the arguments representing the physical
@@ -27,21 +30,22 @@
  * represents the switch matrix.
  */
 #define LAYOUT( \
-	K00, K01, K02, K03, K04, \
-	K10, K11, K12, K13, K14, \
-	K20, K21, K22, K23, K24, \
-	K32, K33, K34, \
-	K40, K41, K42, K43, K44, \
-	K50, K51, K52, K53, K54, \
-	K60, K61, K62, K63, K64, \
-	K70, K71, K72  \
-) { \
-	{ K04,   K03,   K02,   K01,   K00   }, \
-	{ K14,   K13,   K12,   K11,   K10   }, \
-	{ K24,   K23,   K22,   K21,   K20   }, \
-	{ K34,   K33,   K32,   KC_NO, KC_NO },  \
-	{ K40,   K41,   K42,   K43,   K44   }, \
-	{ K50,   K51,   K52,   K53,   K54   }, \
-	{ K60,   K61,   K62,   K63,   K64   }, \
-	{ K70,   K71,   K72,   KC_NO, KC_NO }  \
-}
+  K00, K01, K02, K03, K04, K33,               \
+  K10, K11, K12, K13, K14, \
+  K20, K21, K22, K23, K24, \
+  K30, K31, K32,      \
+  K40, K41, K42, K43, K44, K73,                 \
+  K50, K51, K52, K53, K54, \
+  K60, K61, K62, K63, K64, \
+  K70, K71, K72       \
+ ) \
+ { \
+   { K44, K43, K42, K41, K40 }, \
+   { K54, K53, K52, K51, K50 }, \
+   { K64, K63, K62, K61, K60 }, \
+   { K73, K72, K71, K70, ___ }, \
+   { K00, K01, K02, K03, K04 }, \
+   { K10, K11, K12, K13, K14 }, \
+   { K20, K21, K22, K23, K24 }, \
+   { K33, K30, K31, K32, ___ } \
+ }

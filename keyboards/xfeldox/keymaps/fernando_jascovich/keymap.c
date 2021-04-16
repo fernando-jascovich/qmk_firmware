@@ -4,6 +4,7 @@
 #define _DVORAK 1
 #define _LOWER  3
 #define _RAISE  4
+#define _VIM    7
 #define _MOUSE  10
 #define _ADJUST 16
 
@@ -19,9 +20,7 @@
 extern keymap_config_t keymap_config;
 
 enum custom_codes {
-  TMUX_WIN = SAFE_RANGE,
-  TMUX_LAST,
-  TMUX_COPY
+  VIM_DT = SAFE_RANGE
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -30,7 +29,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // Left
         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_TAB,
         KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
-        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,
+        LT(_VIM, KC_Z),    KC_X,    KC_C,    KC_V,    KC_B,
                                    KC_A1,   KC_A2,   KC_A3,
 
         // Right
@@ -85,6 +84,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______
         ),
 
+    [_VIM] = LAYOUT(
+        // Left
+    	XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                                   _______, _______, _______,
+
+        // Right
+        _______, VIM_DT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        _______, _______, _______
+        ),
+
+
     /*Adjust(Lower+Raise) */
     [_ADJUST] = LAYOUT(
         // Left
@@ -94,9 +108,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                             _______,          _______, _______,
 
         // Right
-        _______, KC__MUTE, KC__VOLDOWN,     KC__VOLUP,                 TMUX_COPY,     TMUX_WIN,
-                 KC_HOME,  KC_PGDN,         KC_PGUP,                   KC_END,        TMUX_LAST,
-                 XXXXXXX,  XXXXXXX,         LCTL(LSFT(KC_PSCR)),       LSFT(KC_PSCR), KC_PSCR,
+        _______, KC__MUTE, KC__VOLDOWN,     KC__VOLUP,        LCTL(LSFT(KC_SPC)), LCTL(LSFT(KC_V)),
+                 KC_HOME,  KC_PGDN,         KC_PGUP,          KC_END,        _______,
+                 _______,  KC_F14,          KC_F15,           LSFT(KC_PSCR), KC_PSCR,
         _______, _______,  _______
         ),
 
@@ -134,12 +148,8 @@ bool custom_key(keyrecord_t *record, const char *seq) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch(keycode) {
-    case TMUX_WIN:
-      return custom_key(record, SS_LCTL("b")"w");
-    case TMUX_LAST:
-      return custom_key(record, SS_LCTL("b")"l");
-    case TMUX_COPY:
-      return custom_key(record, SS_LCTL("b")"[");
+    case VIM_DT:
+      return custom_key(record, SS_TAP(X_ESC)"dt");
     default:
       return true;
   }

@@ -1,8 +1,8 @@
 # Enables
 MOUSEKEY_ENABLE = yes
-TAP_DANCE_ENABLE = yes
 
 # Disables
+TAP_DANCE_ENABLE = no
 AUDIO_ENABLE = no
 NO_DEBUG = yes
 NO_PRINT = yes

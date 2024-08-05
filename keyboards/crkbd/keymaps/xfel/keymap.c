@@ -23,9 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _QWERTY 0
 #define _DVORAK 2
 #define _LOWER 5
-#define _RAISE 10
-#define _ADJUST 15
-#define _MOUSE 20
+#define _RAISE 6
+#define _ADJUST 8
+#define _MOUSE 10
 
 enum my_keycodes {
     EM_W_F = SAFE_RANGE,
@@ -48,7 +48,7 @@ LSFT_T(KC_TAB),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LALT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_RALT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                        MO(_LOWER),KC_LGUI,KC_LCTRL,  KC_SPACE,KC_ENTER,MO(_RAISE)
+                                        MO(_LOWER),KC_LGUI, KC_LCTL,  KC_SPACE,KC_ENTER,MO(_RAISE)
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -61,7 +61,7 @@ LSFT_T(KC_TAB),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                        MO(_LOWER),KC_LGUI,KC_LCTRL,  KC_SPACE,KC_ENTER,MO(_RAISE)
+                                        MO(_LOWER),KC_LGUI,KC_LCTL,   KC_SPACE,KC_ENTER,MO(_RAISE)
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -94,9 +94,9 @@ LSFT_T(KC_TAB),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
         KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,  KC_F6,                         KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_CAPS, XXXXXXX, XXXXXXX,KC__MUTE,KC__VOLDOWN,KC__VOLUP,                  KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX, XXXXXXX,
+      KC_CAPS, XXXXXXX, XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU,                      KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX,DF(_QWERTY),DF(_DVORAK),RESET,                   KC_BRID, KC_BRIU, XXXXXXX, XXXXXXX, LSFT(KC_PSCR),KC_PSCR,
+      XXXXXXX, XXXXXXX, XXXXXXX,DF(_QWERTY),DF(_DVORAK),QK_RBT,                KC_BRID, KC_BRIU, XXXXXXX, XXXXXXX, LSFT(KC_PSCR),KC_PSCR,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
@@ -133,12 +133,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-
-#ifdef OLED_ENABLE
-void oled_task_user(void) {
-    oled_write_P(PSTR("Testing"), false);
-}
-#endif // OLED_ENABLE
 
 /*void keyboard_post_init_user(void) {*/
    /*Customise these values to desired behaviour*/

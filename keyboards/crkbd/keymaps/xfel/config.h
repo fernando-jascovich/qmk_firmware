@@ -37,3 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #define MK_3_SPEED
+#define MK_C_OFFSET_0 2
+#define MK_C_OFFSET_1 8
+#define MK_C_OFFSET_2 16
